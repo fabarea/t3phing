@@ -28,7 +28,7 @@
 
 require_once('Classes/BaseTask.php');
 
-class CheckRemote extends BaseTask {
+class CommandLocal extends BaseTask {
 	
 	/**
 	 * @var string
@@ -38,8 +38,8 @@ class CheckRemote extends BaseTask {
 	/**
 	 * @var string
 	 */
-	protected $directory = '';
-	
+	protected $command = '';
+
     /**
      * Main entry point.
 	 *
@@ -50,43 +50,19 @@ class CheckRemote extends BaseTask {
 		// Initialize task
 		$this->initialize();
 
-		// Makes sure it is possible to connecto to the server
-		if ($this->credentials == '') {
-			throw new Exception ("Exception thrown #1300533385: credentials is empty can not connect to the server\n", 1300533385);
-		}
-
 		// commands that will retrieve the status of the remote working copy
-		$command = 'ssh ' . $this->credentials . " 'svn status " . $this->directory . "'";
+		$command = $this->command;
 
-		// default value for $results
-		$results = array();
-		
 		// if dryRun is set then, the command line is printed out
 		if ($this->properties['dryRun']) {
 			$this->log($command);
 		}
 		else {
 			$results = $this->execute($command);
-		}
-		
-		// analyse the result
-		$exceptions = array();
-		foreach ($results as $result) {
-			if (preg_match('/^M /i', $result)) {
-				$exceptions[] = $result;		
+			if (!empty($results)) {
+				$this->log($results);
 			}
 		}
-		
-		if (! empty($exceptions)) {
-			throw new Exception ("Exception thrown #1300377961: files are not yet committed on the remote working copy\n\n"
-					. implode("\n",  $exceptions)
-					. "\n\n"
-					. "Possible command:\n"
-					. 'ssh ' . $this->credentials . " 'svn diff " . $this->directory . "'\n"
-					. 'ssh ' . $this->credentials . " 'svn revert " . $this->directory . "'\n"
-					. 'ssh ' . $this->credentials . " 'svn commit -m \"Updated some files\" " . $this->directory . "'" ."\n\n\n", 1300377961);
-		}
-		
 	}
 
 	// -------------------------------
@@ -99,18 +75,8 @@ class CheckRemote extends BaseTask {
      * @param string $value
      * @return void
      */
-    public function setDirectory($value){
-        $this->directory = $value;
-    }
-
-    /**
-     * Set the credentials information
-	 *
-     * @param string $value
-     * @return void
-     */
-    public function setCredentials($value){
-        $this->credentials = $value;
+    public function setCommand($value){
+        $this->command = $value;
     }
 
 }

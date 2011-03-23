@@ -64,7 +64,9 @@ class CommandRemote extends BaseTask {
 		}
 		else {
 			$results = $this->execute($command);
-			$this->log($results);
+			if (!empty($results)) {
+				$this->log($results);
+			}
 		}
 	}
 

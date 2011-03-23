@@ -63,8 +63,10 @@ class Rsync extends BaseTask {
 			$this->log($command);
 		}
 		else {
-			#$results = $this->execute($command);
-			$this->log($results);
+			$results = $this->execute($command);
+			if (!empty($results)) {
+				$this->log($results);
+			}
 		}
 	}
 

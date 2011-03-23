@@ -40,6 +40,11 @@ class DumpRemote extends BaseTask {
 	 */
 	protected $directory = '';
 
+	/**
+	 * @var array
+	 */
+	protected $additionalIgnoreTables = array();
+
     /**
      * Main entry point.
 	 *
@@ -60,6 +65,7 @@ class DumpRemote extends BaseTask {
 		$tables[] = 'cache_typo3temp_log';
 		$tables[] = 'sys_log';
 
+		$tables = array_merge($tables, $this->additionalIgnoreTables);
 		foreach ($tables as $table) {
 			$options .= " --ignore-table=" . $this->database . "." . $table;
 		}
@@ -74,7 +80,7 @@ class DumpRemote extends BaseTask {
 		$command .= "mysqldump -u " . $this->username . " -p" . $this->password . " -e -Q --no-data " . $this->database . ' ' . implode(' ', $tables) . " >> " . $this->directory .  $this->database . ".sql ; ";
 
 		$command .= "cd " . $this->directory . " ; ";
-		$command .= "tar -cjvf ".  $this->database . ".bz2 " . $this->database . ".sql ; ";
+		$command .= "tar -cjf ".  $this->database . ".bz2 " . $this->database . ".sql ; ";
 		$command .= "'";
 
 		// if dryRun is set then, the command line is printed out
@@ -83,7 +89,9 @@ class DumpRemote extends BaseTask {
 		}
 		else {
 			$results = $this->execute($command);
-			$this->log($results);
+			if (!empty($results)) {
+				$this->log($results);
+			}
 		}
 	}
 
@@ -149,6 +157,17 @@ class DumpRemote extends BaseTask {
      */
     public function setCredentials($value){
         $this->credentials = $value;
+    }
+
+    /**
+     * Set the credentials information
+	 *
+     * @param string $value
+     * @return void
+     */
+    public function setAdditionalIgnoreTables($value){
+		$tables = explode(',', $value);
+		$this->additionalIgnoreTables = array_map ('trim', $tables);
     }
 
 }

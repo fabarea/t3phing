@@ -80,9 +80,6 @@ class CheckLocal extends BaseTask {
 		if (! empty($exceptions)) {
 			throw new Exception ("Exception thrown #1300377961: files are not yet committed on the local working copy\n\n" . implode("\n",  $exceptions) . '\n\n', 1300377961);
 		}
-		else {
-			$this->log('-> OK');
-		}
 
 	}
 
