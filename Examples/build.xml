@@ -1,0 +1,247 @@
+<?xml version="1.0"?>
+<!--
+	This build file fetches the data from a remote website and build it again locally
+-->
+<project name="CHANGEME" basedir="." default="help"  description="Fetches the data from a remote website and build it again locally">
+
+	<!-- FLAGS -->
+	<property name="dryRun" value=""/>
+
+	<!-- REMOTE PROPERTY -->
+	<property name="domain.remote" value="CHANGEME"/> <!-- example: domain.tld without "www" -->
+	<property name="site.remote.directory" value="CHANGEME/"/> <!-- example: /var/www/ -->
+	<property name="site.remote.directory.temp" value="/tmp/"/>
+	<property name="server.credentials" value="CHANGEME"/><!-- tip: add credentials in .ssh/config -->
+	<property name="database.remote.name" value="CHANGEME"/>
+	<property name="database.remote.username" value="CHANGEME"/>
+	<property name="database.remote.password" value="CHANGEME"/>
+
+	<!-- LOCAL PROPERTY -->
+	<property name="domain.local" value="CHANGEME"/><!-- example: domain.local -->
+	<property name="site.local.directory" value="CHANGEME/"/><!-- example: /home/fudriot/dev/sites/ -->
+	<property name="database.local.name" value="CHANGEME"/>
+	<property name="database.local.username" value="CHANGEME"/>
+	<property name="database.local.password" value="CHANGEME"/>
+	<property name="database.local.host" value="127.0.0.1"/>
+
+	<!-- RUNNING VARIABLES -->
+	<property name="command.local.mysql" value="CHANGEME"/><!-- example: /usr/bin/mysql -->
+	<property name="t3phing.home" value="CHANGEME"/> <!-- example: /home/fudriot/dev/t3phing -->
+	<property name="mysql.local" value="${command.local.mysql} -u ${database.local.username} -p${database.local.password}"/>
+
+	<!-- FILE SET -->
+	<fileset dir="${site.local.directory}typo3temp" id="typo3temp">
+		<include name="compressor/**"/>
+		<include name="sprites/**"/>
+		<include name="*.js"/>
+		<include name="*.css"/>
+	</fileset>
+	<fileset dir="${site.local.directory}typo3conf" id="typo3conf">
+		<include name="temp*"/>
+		<include name="*.log"/>
+	</fileset>
+	<path id="phingHome">
+		<pathelement dir="${t3phing.home}"/>
+	</path>
+	<path id="phingClasses">
+		<pathelement dir="${t3phing.home}Classes/"/>
+	</path>
+	
+	<!-- TASK DEFINITION -->
+	<taskdef name="checkRemote" classname="CheckRemote" classpathref="phingClasses"/>
+	<taskdef name="checkLocal" classname="CheckLocal" classpathref="phingClasses"/>
+	<taskdef name="svnUpdateLocal" classname="SvnUpdateLocal" classpathref="phingClasses"/>
+	<taskdef name="rsync" classname="Rsync" classpathref="phingClasses"/>
+	<taskdef name="localconfFinisher" classname="LocalconfFinisher" classpathref="phingClasses"/>
+	<taskdef name="dumpRemote" classname="DumpRemote" classpathref="phingClasses"/>
+	<taskdef name="commandRemote" classname="CommandRemote" classpathref="phingClasses"/>
+	<taskdef name="commandLocal" classname="CommandLocal" classpathref="phingClasses"/>
+	
+
+	<!--
+		==============================================
+		Default entry point
+		==============================================
+	-->
+	<target name="help">
+		<echo/>
+		<echo>Usage of this Phing</echo>
+		<echo>-------------------</echo>
+		<echo/>
+		<echo>phing fetch       - check,svnupdate,rsync,dump,clean</echo>
+		<echo>phing check       - make sure there is not pending file on the remote server as well as
+		                on the local server. This taks will prevent conflict to occur</echo>
+		<echo>phing svnupdate   - svn update on the working copy</echo>
+		<echo>phing rsync       - fetch the remote files from the remote website</echo>
+		<echo>phing dump        - fetch the database and build it again locally</echo>
+		<echo>phing init        - initialize the local website</echo>
+		<echo>phing clean       - delete unnecessary files</echo>
+		<echo>phing test        - test the environment and the remote connection (not yet implemented)</echo>
+		<echo>phing help        - display this help message</echo>
+	</target>
+
+	<!--
+		==============================================
+		Main entry point
+		==============================================
+	-->
+	<target name="fetch" depends="check,svnupdate,rsync,dump,clean">
+	</target>
+
+
+	<!--
+		==============================================
+		Dump database
+		==============================================
+	-->
+	<target name="dump" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Dump database              |</echo>
+		<echo>-----------------------------</echo>
+
+		<echo>Dumping remote database...</echo>
+		
+		<dumpRemote 
+			credentials="${server.credentials}"
+			directory="${site.remote.directory.temp}"
+			database="${database.remote.name}"
+			username="${database.remote.username}"
+			password="${database.remote.password}"
+			additionalIgnoreTables="tx_devlog, tx_realurl_chashcache, tx_realurl_errorlog, tx_realurl_pathcache,
+									tx_realurl_redirects, tx_realurl_uniqalias , tx_realurl_urldecodecache, tx_realurl_urlencodecache,
+									tx_tcdirectmail_clicklinks, tx_tcdirectmail_lock, tx_tcdirectmail_sentlog"
+			/>
+
+		<echo>Fetching dump...</echo>
+		<rsync credentials="${server.credentials}" remoteDirectory="${site.remote.directory.temp}${database.remote.name}.bz2" localDirectory="${site.local.directory}"/>
+
+		<echo>Extracting file...</echo>
+		<commandLocal command="tar -C ${site.local.directory} -xjf ${site.local.directory}${database.remote.name}.bz2"/>
+
+		<echo>Import dump...</echo>
+		<commandLocal command="${mysql.local} ${database.local.name} &lt; ${site.local.directory}${database.remote.name}.sql"/>
+
+
+		<echo>Fine tunes database...</echo>
+		<commandLocal command="${mysql.local} -e &quot;UPDATE sys_domain SET domainName = REPLACE(domainName, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+		<commandLocal command="${mysql.local} -e &quot;UPDATE sys_template SET title = REPLACE(title, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+		<commandLocal command="${mysql.local} -e &quot;UPDATE sys_template SET config = REPLACE(config, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+		<commandLocal command="${mysql.local} -e &quot;UPDATE sys_template SET constants = REPLACE(constants, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+		<commandLocal command="${mysql.local} -e &quot;UPDATE pages SET title = REPLACE(title, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+
+		<!-- reset database password for admin user -->
+		<commandLocal command="${mysql.local} -e &quot;UPDATE be_users SET username = 'admin', password = '5f4dcc3b5aa765d61d8327deb882cf99' WHERE username = 'ecoadmin';&quot; ${database.local.name}"/>
+
+		<echo>Clean up environment...</echo>
+		<commandRemote credentials="${server.credentials}" command="rm ${site.remote.directory.temp}${database.remote.name}.bz2"/>
+		<commandLocal command="rm -f ${site.local.directory}${database.remote.name}.bz2"/>
+		<commandLocal command="rm -f ${site.local.directory}${database.remote.name}.sql"/>
+	</target>
+
+	<!--
+		==============================================
+		Synchronize source code
+		==============================================
+	-->
+	<target name="clean" depends="">
+
+		<echo>Deleting temporary files...</echo>
+		<delete>
+			<fileset refid="typo3temp"/>
+			<fileset refid="typo3conf"/>
+		</delete>
+	</target>
+
+	<!--
+		==============================================
+		Synchronize source code
+		==============================================
+	-->
+	<target name="rsync" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Update media files         |</echo>
+		<echo>-----------------------------</echo>
+		<echo>Updating Rsync files 1/2...</echo>
+		<rsync
+			credentials="${server.credentials}"
+			remoteDirectory="${site.remote.directory}fileadmin/user_upload/resources"
+			localDirectory="${site.local.directory}fileadmin/user_upload"/>
+
+		<echo>Updating Rsync files 2/2...</echo>
+		<rsync
+			credentials="${server.credentials}"
+			remoteDirectory="${site.remote.directory}uploads"
+			localDirectory="${site.local.directory}"/>
+
+	</target>
+
+	<!--
+		==============================================
+		Synchronize source code
+		==============================================
+	-->
+	<target name="init" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Initialize project         |</echo>
+		<echo>-----------------------------</echo>
+		<echo>Copying files...</echo>
+		<rsync
+			credentials="${server.credentials}"
+			remoteDirectory="${site.remote.directory}typo3conf/localconf.php"
+			localDirectory="${site.local.directory}typo3conf/localconf.php"/>
+		<commandLocal command="scp -q ${server.credentials}:${site.remote.directory}.htaccess ${site.local.directory}"/>
+
+		<echo>Updating localconf...</echo>
+		<localconfFinisher
+			directory="${site.local.directory}"
+			database="${database.local.name}"
+			username="${database.local.username}"
+			password="${database.local.password}"
+			host="${database.local.host}"/>
+
+		<echo>Making symlink...</echo>
+		<delete	file="${site.local.directory}typo3_src"/>
+		<symlink target="/t3core/typo3_src-4.5.2.tag" link="${site.local.directory}typo3_src" />
+	</target>
+
+	<!--
+		==============================================
+		Update source code
+		==============================================
+	-->
+	<target name="svnupdate" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Update SVN files           |</echo>
+		<echo>-----------------------------</echo>
+		<echo>Updating source code...</echo>
+		<svnUpdateLocal directory="${site.local.directory}"/>
+	</target>
+
+	<!--
+		==============================================
+		Check working copy status
+		==============================================
+	-->
+	<target name="check" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Checking working copies    |</echo>
+		<echo>-----------------------------</echo>
+		<echo>Checking remote status...</echo>
+		<checkRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
+		<echo>Checking local status...</echo>
+		<checkLocal directory="${site.local.directory}" />
+	</target>
+
+	<!--
+		==============================================
+		Test the environment
+		==============================================
+	-->
+	<target name="test" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Test environment           |</echo>
+		<echo>-----------------------------</echo>
+		<echo>Not yet implemented</echo>
+	</target>
+
+</project>
