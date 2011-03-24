@@ -26,7 +26,7 @@
  * $Id: CheckRemote.php 2392 2011-02-15 16:28:16Z fab1en $
  */
 
-require_once('Classes/BaseTask.php');
+require_once('BaseTask.php');
 
 class DumpRemote extends BaseTask {
 
