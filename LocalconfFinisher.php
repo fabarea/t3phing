@@ -70,7 +70,11 @@ class LocalconfFinisher extends BaseTask {
 		$replacements[] = "typo_db_host = '" . $this->host;
 
 		// Add no cache line
-		$replacements[] = '$TYPO3_CONF_VARS["EXT"]["extCache"] = \'0\';' . "\n?>";
+		$replacement = '$TYPO3_CONF_VARS["EXT"]["extCache"] = \'0\';' . chr(10);
+		$replacement .= '$TYPO3_CONF_VARS["SYS"]["cookieDomain"] = \'\';' . chr(10);
+		$replacement .= "?>" . chr(10);
+		$replacements[] = $replacement;
+
 		$content = preg_replace($patterns, $replacements, $content);
 
 		// if dryRun is set then, the command line is printed out
