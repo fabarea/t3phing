@@ -87,7 +87,7 @@ class SvnUpdateLocal extends BaseTask {
 			$display = FALSE;
 			foreach ($suboutput as $row) {
 
-				if (preg_match('/^U|^C/i', $row)) {
+				if (preg_match('/^U |^C /i', trim($row))) {
 					$display = TRUE;
 					break;
 				}
