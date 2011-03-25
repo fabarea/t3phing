@@ -5,7 +5,7 @@
 <project name="CHANGEME" basedir="." default="help"  description="Fetches the data from a remote website and build it again locally">
 
 	<!-- FLAGS -->
-	<property name="dryRun" value=""/>
+	<property name="dryRun" value="${dryRun}"/>
 
 	<!-- REMOTE PROPERTY -->
 	<property name="domain.remote" value="CHANGEME"/> <!-- example: domain.tld without "www" -->
