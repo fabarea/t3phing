@@ -59,7 +59,7 @@ class Rsync extends BaseTask {
 		$command = "rsync -a " . $this->credentials . ':' . $this->remoteDirectory . ' ' . $this->localDirectory;
 
 		// if dryRun is set then, the command line is printed out
-		if ($this->properties['dryRun']) {
+		if ($this->properties['dryRun'] === 'true' || $this->properties['dryRun'] === TRUE) {
 			$this->log($command);
 		}
 		else {

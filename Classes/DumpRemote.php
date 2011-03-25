@@ -84,7 +84,7 @@ class DumpRemote extends BaseTask {
 		$command .= "'";
 
 		// if dryRun is set then, the command line is printed out
-		if ($this->properties['dryRun']) {
+		if ($this->properties['dryRun'] === 'true' || $this->properties['dryRun'] === TRUE) {
 			$this->log($command);
 		}
 		else {
