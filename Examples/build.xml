@@ -2,7 +2,14 @@
 <!--
 	This build file fetches the data from a remote website and build it again locally
 -->
-<project name="CHANGEME" basedir="." default="help"  description="Fetches the data from a remote website and build it again locally">
+<project name="Ichtus" basedir="." default="help"  description="Fetches the data from a remote website and build it again locally">
+
+	<!--
+		STEP TODO BY HAND WHEN INITIALIZING
+		- create an entry in /etc/hosts (two possible entries with www.)
+		- create a virtual host for Apache (add instruction server alias for www.)
+		- create a new database in MySQL
+	-->
 
 	<!-- FLAGS -->
 	<property name="dryRun" value="${dryRun}"/>
@@ -15,18 +22,22 @@
 	<property name="database.remote.name" value="CHANGEME"/>
 	<property name="database.remote.username" value="CHANGEME"/>
 	<property name="database.remote.password" value="CHANGEME"/>
+	<property name="svn.repository" value="https://dev.ecodev.ch/svn/ichtus.ch/trunk/htdocs"/>
+
 
 	<!-- LOCAL PROPERTY -->
 	<property name="domain.local" value="CHANGEME"/><!-- example: domain.local -->
 	<property name="site.local.directory" value="CHANGEME/"/><!-- example: /home/fudriot/dev/sites/ -->
+	<property name="path.core" value="/t3core/typo3_src-4.5.2.tag"/>
 	<property name="database.local.name" value="CHANGEME"/>
 	<property name="database.local.username" value="CHANGEME"/>
 	<property name="database.local.password" value="CHANGEME"/>
 	<property name="database.local.host" value="127.0.0.1"/>
 
+
 	<!-- RUNNING VARIABLES -->
-	<property name="command.local.mysql" value="CHANGEME"/><!-- example: /usr/bin/mysql -->
-	<property name="t3phing.home" value="CHANGEME"/> <!-- example: /home/fudriot/dev/t3phing -->
+	<property name="t3phing.home" value="/Users/fudriot/Scripts/t3phing/"/>
+	<property name="command.local.mysql" value="/opt/local/bin/mysql5"/>
 	<property name="mysql.local" value="${command.local.mysql} -u ${database.local.username} -p${database.local.password}"/>
 
 	<!-- FILE SET -->
@@ -46,17 +57,24 @@
 	<path id="phingClasses">
 		<pathelement dir="${t3phing.home}Classes/"/>
 	</path>
-	
+
 	<!-- TASK DEFINITION -->
 	<taskdef name="checkRemote" classname="CheckRemote" classpathref="phingClasses"/>
-	<taskdef name="checkLocal" classname="CheckLocal" classpathref="phingClasses"/>
-	<taskdef name="svnUpdateLocal" classname="SvnUpdateLocal" classpathref="phingClasses"/>
 	<taskdef name="rsync" classname="Rsync" classpathref="phingClasses"/>
+	<taskdef name="checkLocal" classname="CheckLocal" classpathref="phingClasses"/>
 	<taskdef name="localconfFinisher" classname="LocalconfFinisher" classpathref="phingClasses"/>
 	<taskdef name="dumpRemote" classname="DumpRemote" classpathref="phingClasses"/>
 	<taskdef name="commandRemote" classname="CommandRemote" classpathref="phingClasses"/>
 	<taskdef name="commandLocal" classname="CommandLocal" classpathref="phingClasses"/>
-	
+
+	<taskdef name="svnUpdateLocal" classname="SvnUpdateLocal" classpathref="phingClasses"/>
+	<taskdef name="svnCheckoutLocal" classname="SvnCheckoutLocal" classpathref="phingClasses"/>
+	<taskdef name="svnCommitLocal" classname="SvnCommitLocal" classpathref="phingClasses"/>
+
+	<taskdef name="svnStatusRemote" classname="SvnStatusRemote" classpathref="phingClasses"/>
+	<taskdef name="svnUpdateRemote" classname="SvnUpdateRemote" classpathref="phingClasses"/>
+	<taskdef name="svnDiffRemote" classname="SvnDiffRemote" classpathref="phingClasses"/>
+	<taskdef name="svnCommitRemote" classname="SvnCommitRemote" classpathref="phingClasses"/>
 
 	<!--
 		==============================================
@@ -64,30 +82,140 @@
 		==============================================
 	-->
 	<target name="help">
+		<echo>Usage of this Phing:</echo>
 		<echo/>
-		<echo>Usage of this Phing</echo>
-		<echo>-------------------</echo>
+		<echo>---------------------------------------------</echo>
+		<echo>Convenience tasks</echo>
+		<echo>---------------------------------------------</echo>
+		<echo>phing initialize     - checkRemote,checkout,fetchMedia,fetchLocalconf,fetchHtaccess,createSymlink,dump</echo>
+		<echo>phing fetchAll       - check,update,fetchMedia,dump,clean</echo>
+		<echo>phing fetchFiles     - update,fetchMedia</echo>
+		<echo>phing push           - commit,update-remote, use -Dmessage="my message"</echo>
+		<echo>phing check          - checkLocal,checkRemote</echo>
+		<echo>phing test           - test the environment and the remote connection (not yet implemented)</echo>
+		<echo>phing help           - display this help message</echo>
+
+
 		<echo/>
-		<echo>phing fetch       - check,svnupdate,rsync,dump,clean</echo>
-		<echo>phing check       - make sure there is not pending file on the remote server as well as
-		                on the local server. This taks will prevent conflict to occur</echo>
-		<echo>phing svnupdate   - svn update on the working copy</echo>
-		<echo>phing rsync       - fetch the remote files from the remote website</echo>
-		<echo>phing dump        - fetch the database and build it again locally</echo>
-		<echo>phing init        - initialize the local website</echo>
-		<echo>phing clean       - delete unnecessary files</echo>
-		<echo>phing test        - test the environment and the remote connection (not yet implemented)</echo>
-		<echo>phing help        - display this help message</echo>
+		<echo>---------------------------------------------</echo>
+		<echo>Files tasks</echo>
+		<echo>---------------------------------------------</echo>
+		<echo>phing fetchMedia     - fetch the remote files from the remote website</echo>
+		<echo>phing clean          - delete unnecessary files</echo>
+		<echo>phing checkRemote    - make sure there is not pending file on the remote</echo>
+		<echo>phing checkLocal     - make sure there is not pending file on the local server</echo>
+		<echo>phing fetchLocalconf - fetch localconf.php and add custom values</echo>
+		<echo>phing fetchHtaccess  - fetch the htaccess from the remote server</echo>
+		<echo>phing createSymlink  - create symlinks to the core</echo>
+
+		<echo/>
+		<echo>---------------------------------------------</echo>
+		<echo>MySQL tasks</echo>
+		<echo>---------------------------------------------</echo>
+		<echo>phing dump           - fetch the database and build it again locally</echo>
+
+		<echo/>
+		<echo>---------------------------------------------</echo>
+		<echo>SVN tasks</echo>
+		<echo>---------------------------------------------</echo>
+		<echo>phing update         - svn update</echo>
+		<echo>phing checkout       - svn checkout - initialzation step</echo>
+		<echo>phing commit         - svn local commit, use -Dmessage="my message"</echo>
+		<echo>phing status-remote  - svn remote status</echo>
+		<echo>phing diff-remote    - svn remote diff</echo>
+		<echo>phing commit-remote  - svn remote commit, use -Dmessage="my message"</echo>
+		<echo>phing update-remote  - svn remote update</echo>
+
+		<echo/>
+		<echo>---------------------------------------------</echo>
+		<echo>Possible option</echo>
+		<echo>---------------------------------------------</echo>
+		<echo>-DdryRun=true        - will display the command to be executed</echo>
 	</target>
 
 	<!--
 		==============================================
-		Main entry point
+		entry point
 		==============================================
 	-->
-	<target name="fetch" depends="check,svnupdate,rsync,dump,clean">
+	<target name="initialize" depends="checkRemote,checkout,fetchMedia,fetchLocalconf,fetchHtaccess,createSymlink,dump"/>
+	<target name="fetchAll" depends="check,update,fetchMedia,dump,clean"/>
+	<target name="fetchFiles" depends="update,fetchMedia"/>
+	<target name="push" depends="commit,update-remote"/>
+	<target name="check" depends="checkLocal,checkRemote"/>
+
+
+	<!--
+		==============================================
+		Svn Commit Local
+		==============================================
+	-->
+	<target name="commit" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Committing local changes   |</echo>
+		<echo>-----------------------------</echo>
+		<svnCommitLocal directory="${site.local.directory}" message="${message}"/>
 	</target>
 
+	<!--
+		==============================================
+		Svn Commit Local
+		==============================================
+	-->
+	<target name="commit" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Committing local changes   |</echo>
+		<echo>-----------------------------</echo>
+		<svnCommitLocal directory="${site.remote.directory}" credentials="${server.credentials}" message="${message}"/>
+	</target>
+
+	<!--
+		==============================================
+		Svn Diff Remote
+		==============================================
+	-->
+	<target name="diff-remote" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Making diff remote         |</echo>
+		<echo>-----------------------------</echo>
+		<svnDiffRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
+	</target>
+
+	<!--
+		==============================================
+		Svn Commit Status
+		==============================================
+	-->
+	<target name="commit-remote" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Committing remote          |</echo>
+		<echo>-----------------------------</echo>
+		<svnCommitRemote directory="${site.remote.directory}" credentials="${server.credentials}" message="${message}"/>
+	</target>
+
+	<!--
+		==============================================
+		Svn Remote Status
+		==============================================
+	-->
+	<target name="update-remote" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Updating remote status    |</echo>
+		<echo>-----------------------------</echo>
+		<svnUpdateRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
+	</target>
+
+	<!--
+		==============================================
+		Svn Remote Status
+		==============================================
+	-->
+	<target name="status-remote" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Checking remote status    |</echo>
+		<echo>-----------------------------</echo>
+		<svnStatusRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
+	</target>
 
 	<!--
 		==============================================
@@ -100,14 +228,14 @@
 		<echo>-----------------------------</echo>
 
 		<echo>Dumping remote database...</echo>
-		
-		<dumpRemote 
+
+		<dumpRemote
 			credentials="${server.credentials}"
 			directory="${site.remote.directory.temp}"
 			database="${database.remote.name}"
 			username="${database.remote.username}"
 			password="${database.remote.password}"
-			additionalIgnoreTables="tx_devlog, tx_realurl_chashcache, tx_realurl_errorlog, tx_realurl_pathcache,
+			additionalIgnoreTables="tx_realurl_chashcache, tx_realurl_errorlog, tx_realurl_pathcache,
 									tx_realurl_redirects, tx_realurl_uniqalias , tx_realurl_urldecodecache, tx_realurl_urlencodecache,
 									tx_tcdirectmail_clicklinks, tx_tcdirectmail_lock, tx_tcdirectmail_sentlog"
 			/>
@@ -144,7 +272,9 @@
 		==============================================
 	-->
 	<target name="clean" depends="">
-
+		<echo>-----------------------------</echo>
+		<echo>| Clean up                  |</echo>
+		<echo>-----------------------------</echo>
 		<echo>Deleting temporary files...</echo>
 		<delete>
 			<fileset refid="typo3temp"/>
@@ -157,17 +287,17 @@
 		Synchronize source code
 		==============================================
 	-->
-	<target name="rsync" depends="">
+	<target name="fetchMedia" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Update media files         |</echo>
+		<echo>| Fetch media files         |</echo>
 		<echo>-----------------------------</echo>
-		<echo>Updating Rsync files 1/2...</echo>
+		<echo>fetching files 1/2...</echo>
 		<rsync
 			credentials="${server.credentials}"
 			remoteDirectory="${site.remote.directory}fileadmin/user_upload/resources"
 			localDirectory="${site.local.directory}fileadmin/user_upload"/>
 
-		<echo>Updating Rsync files 2/2...</echo>
+		<echo>fetching files 2/2...</echo>
 		<rsync
 			credentials="${server.credentials}"
 			remoteDirectory="${site.remote.directory}uploads"
@@ -175,21 +305,13 @@
 
 	</target>
 
-	<!--
-		==============================================
-		Synchronize source code
-		==============================================
-	-->
-	<target name="init" depends="">
+	<!-- ============================================== -->
+	<target name="fetchLocalconf" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Initialize project         |</echo>
+		<echo>| localconf.php              |</echo>
 		<echo>-----------------------------</echo>
-		<echo>Copying files...</echo>
-		<rsync
-			credentials="${server.credentials}"
-			remoteDirectory="${site.remote.directory}typo3conf/localconf.php"
-			localDirectory="${site.local.directory}typo3conf/localconf.php"/>
-		<commandLocal command="scp -q ${server.credentials}:${site.remote.directory}.htaccess ${site.local.directory}"/>
+		<echo>Fetching file...</echo>
+		<commandLocal command="scp -q ${server.credentials}:${site.remote.directory}typo3conf/localconf.php ${site.local.directory}typo3conf/localconf.php"/>
 
 		<echo>Updating localconf...</echo>
 		<localconfFinisher
@@ -198,10 +320,25 @@
 			username="${database.local.username}"
 			password="${database.local.password}"
 			host="${database.local.host}"/>
+	</target>
 
-		<echo>Making symlink...</echo>
+	<!-- ============================================== -->
+	<target name="fetchHtaccess" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| .htaccess                  |</echo>
+		<echo>-----------------------------</echo>
+		<echo>Fetching file...</echo>
+		<commandLocal command="scp -q ${server.credentials}:${site.remote.directory}.htaccess ${site.local.directory}"/>
+	</target>
+
+	<!-- ============================================== -->
+	<target name="createSymlink" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Symlink                   |</echo>
+		<echo>-----------------------------</echo>
+		<echo>Creating symlink...</echo>
 		<delete	file="${site.local.directory}typo3_src"/>
-		<symlink target="/t3core/typo3_src-4.5.2.tag" link="${site.local.directory}typo3_src" />
+		<symlink target="${path.core}" link="${site.local.directory}typo3_src" />
 	</target>
 
 	<!--
@@ -209,12 +346,20 @@
 		Update source code
 		==============================================
 	-->
-	<target name="svnupdate" depends="">
+	<target name="update" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Update SVN files           |</echo>
+		<echo>| Update                     |</echo>
 		<echo>-----------------------------</echo>
-		<echo>Updating source code...</echo>
+		<echo>Updating files...</echo>
 		<svnUpdateLocal directory="${site.local.directory}"/>
+	</target>
+
+	<target name="checkout" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Checkout                   |</echo>
+		<echo>-----------------------------</echo>
+		<echo>Checking out files...</echo>
+		<svnCheckoutLocal repository="${svn.repository}" directory="${site.local.directory}"/>
 	</target>
 
 	<!--
@@ -222,14 +367,21 @@
 		Check working copy status
 		==============================================
 	-->
-	<target name="check" depends="">
+
+	<target name="checkLocal" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Checking working copies    |</echo>
+		<echo>| Local check                |</echo>
+		<echo>-----------------------------</echo>
+		<echo>Checking local status...</echo>
+		<checkLocal directory="${site.local.directory}" />
+	</target>
+
+	<target name="checkRemote" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Remote check               |</echo>
 		<echo>-----------------------------</echo>
 		<echo>Checking remote status...</echo>
 		<checkRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
-		<echo>Checking local status...</echo>
-		<checkLocal directory="${site.local.directory}" />
 	</target>
 
 	<!--
