@@ -33,11 +33,6 @@ class CommandLocal extends BaseTask {
 	/**
 	 * @var string
 	 */
-	protected $credentials = '';
-	
-	/**
-	 * @var string
-	 */
 	protected $command = '';
 
     /**

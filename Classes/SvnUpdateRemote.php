@@ -87,7 +87,7 @@ class SvnUpdateRemote extends BaseTask {
 			$display = FALSE;
 			foreach ($suboutput as $row) {
 
-				if (preg_match('/^U |^C /i', trim($row))) {
+				if (preg_match('/^U |^C |^A |^G /i', trim($row))) {
 					$display = TRUE;
 					break;
 				}

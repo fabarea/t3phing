@@ -72,7 +72,7 @@ class CheckRemote extends BaseTask {
 		// analyse the result
 		$exceptions = array();
 		foreach ($results as $result) {
-			if (preg_match('/^M /i', $result)) {
+			if (preg_match('/^M |^\? /i', $result)) {
 				$exceptions[] = $result;		
 			}
 		}
@@ -84,7 +84,8 @@ class CheckRemote extends BaseTask {
 					. "Possible command:\n"
 					. 'ssh ' . $this->credentials . " 'svn diff " . $this->directory . "'\n"
 					. 'ssh ' . $this->credentials . " 'svn revert " . $this->directory . "'\n"
-					. 'ssh ' . $this->credentials . " 'svn commit -m \"Updated some files\" " . $this->directory . "'" ."\n\n\n", 1300377961);
+					. 'ssh ' . $this->credentials . " 'svn add " . $this->directory . "'\n"
+					. 'ssh ' . $this->credentials . " 'svn commit -m \"Phing commit: pending changes\" " . $this->directory . "'" ."\n\n\n", 1300377961);
 		}
 		
 	}
