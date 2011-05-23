@@ -2,7 +2,7 @@
 <!--
 	This build file fetches the data from a remote website and build it again locally
 -->
-<project name="Ichtus" basedir="." default="help"  description="Fetches the data from a remote website and build it again locally">
+<project name="" basedir="." default="help"  description="Fetches the data from a remote website and build it again locally">
 
 	<!--
 		STEP TODO BY HAND WHEN INITIALIZING
@@ -22,7 +22,8 @@
 	<property name="database.remote.name" value="CHANGEME"/>
 	<property name="database.remote.username" value="CHANGEME"/>
 	<property name="database.remote.password" value="CHANGEME"/>
-	<property name="svn.repository" value="https://dev.ecodev.ch/svn/ichtus.ch/trunk/htdocs"/>
+	<property name="database.remote.table.ignore" value=",tx_tcdirectmail_clicklinks, tx_tcdirectmail_lock, tx_tcdirectmail_sentlog"/> <!-- edit this value -->
+	<property name="svn.repository" value="https://dev.ecodev.ch/svn/CHANGEME/trunk/htdocs"/>
 
 
 	<!-- LOCAL PROPERTY -->
@@ -87,8 +88,8 @@
 		<echo>---------------------------------------------</echo>
 		<echo>Convenience tasks</echo>
 		<echo>---------------------------------------------</echo>
-		<echo>phing initialize     - checkRemote,checkout,fetchMedia,fetchLocalconf,fetchHtaccess,createSymlink,dump</echo>
-		<echo>phing fetchAll       - check,update,fetchMedia,dump,clean</echo>
+		<echo>phing initialize     - checkout,fetchMedia,fetchLocalconf,fetchHtaccess,createSymlink,dump</echo>
+		<echo>phing fetchAll       - update,fetchMedia,dump,fetchLocalconf,clean</echo>
 		<echo>phing fetchFiles     - update,fetchMedia</echo>
 		<echo>phing push           - commit,update-remote, use -Dmessage="my message"</echo>
 		<echo>phing check          - checkLocal,checkRemote</echo>
@@ -138,12 +139,11 @@
 		entry point
 		==============================================
 	-->
-	<target name="initialize" depends="checkRemote,checkout,fetchMedia,fetchLocalconf,fetchHtaccess,createSymlink,dump"/>
-	<target name="fetchAll" depends="check,update,fetchMedia,dump,clean"/>
+	<target name="initialize" depends="checkout,fetchMedia,fetchLocalconf,fetchHtaccess,createSymlink,dump"/>
+	<target name="fetchAll" depends="update,fetchMedia,dump,fetchLocalconf,clean"/>
 	<target name="fetchFiles" depends="update,fetchMedia"/>
 	<target name="push" depends="commit,update-remote"/>
 	<target name="check" depends="checkLocal,checkRemote"/>
-
 
 	<!--
 		==============================================
@@ -236,8 +236,8 @@
 			username="${database.remote.username}"
 			password="${database.remote.password}"
 			additionalIgnoreTables="tx_realurl_chashcache, tx_realurl_errorlog, tx_realurl_pathcache,
-									tx_realurl_redirects, tx_realurl_uniqalias , tx_realurl_urldecodecache, tx_realurl_urlencodecache,
-									tx_tcdirectmail_clicklinks, tx_tcdirectmail_lock, tx_tcdirectmail_sentlog"
+									tx_realurl_redirects, tx_realurl_uniqalias , tx_realurl_urldecodecache, tx_realurl_urlencodecache
+									"
 			/>
 
 		<echo>Fetching dump...</echo>
@@ -261,9 +261,11 @@
 		<commandLocal command="${mysql.local} -e &quot;UPDATE be_users SET username = 'admin', password = '5f4dcc3b5aa765d61d8327deb882cf99' WHERE username = 'ecoadmin';&quot; ${database.local.name}"/>
 
 		<echo>Clean up environment...</echo>
-		<commandRemote credentials="${server.credentials}" command="rm ${site.remote.directory.temp}${database.remote.name}.bz2"/>
 		<commandLocal command="rm -f ${site.local.directory}${database.remote.name}.bz2"/>
 		<commandLocal command="rm -f ${site.local.directory}${database.remote.name}.sql"/>
+
+		<commandRemote credentials="${server.credentials}" command="rm ${site.remote.directory.temp}${database.remote.name}.sql"/>
+		<commandRemote credentials="${server.credentials}" command="rm ${site.remote.directory.temp}${database.remote.name}.bz2"/>
 	</target>
 
 	<!--
