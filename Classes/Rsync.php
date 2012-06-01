@@ -53,7 +53,7 @@ class Rsync extends BaseTask {
 		// Makes sure it is possible to connecto to the server
 		if (! file_exists($this->localDirectory) &&
 				! ($this->properties['dryRun'] === 'true' || $this->properties['dryRun'] === TRUE)) {
-			throw new Exception ("Exception thrown #1300533385:\n\n local directory does not exist : \"" . $this->localDirectory . "\"\n\n", 1300533385);
+			mkdir($this->localDirectory);
 		}
 		
 		// commands that will retrieve the status of the remote working copy

@@ -56,7 +56,7 @@ class LocalconfFinisher extends BaseTask {
 
 		if (! ($this->properties['dryRun'] === 'true' || $this->properties['dryRun'] === TRUE)) {
 			// Replaces the database name, user and password
-			$content = file_get_contents($this->directory . 'typo3conf/localconf.php');
+			$content = file_get_contents($this->directory . 'htdocs/typo3conf/localconf.php');
 
 			$patterns[] = "/typo_db = '[^']+/";
 			$patterns[] = "/typo_db_username = '[^']+/";
@@ -72,13 +72,14 @@ class LocalconfFinisher extends BaseTask {
 			// Add no cache line
 			$replacement = '$TYPO3_CONF_VARS["EXT"]["extCache"] = \'0\';' . chr(10);
 			$replacement .= '$TYPO3_CONF_VARS["SYS"]["cookieDomain"] = \'\';' . chr(10);
+			$replacement .= '$TYPO3_CONF_VARS["GFX"]["im_path"] = \'/opt/local/bin/\';' . chr(10);
 			$replacement .= "?>" . chr(10);
 			$replacements[] = $replacement;
 
 			$content = preg_replace($patterns, $replacements, $content);
 
 			// if dryRun is set then, the command line is printed out
-			file_put_contents($this->directory . 'typo3conf/localconf.php', $content);
+			file_put_contents($this->directory . 'htdocs/typo3conf/localconf.php', $content);
 		}
 	}
 

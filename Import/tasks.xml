@@ -1,0 +1,222 @@
+<?xml version="1.0"?>
+<project name="imported task" basedir="." default=""  description="">
+
+	<!--
+		==============================================
+		Default entry point
+		==============================================
+	-->
+	<target name="help">
+		<echo>Usage of this Phing:</echo>
+		<echo/>
+		<echo>phing dump       - fetch the database and build it again locally</echo>
+		<echo>phing localconf  - fetch localconf.php and add custom values</echo>
+		<echo>phing htaccess   - fetch the htaccess from the remote server</echo>
+		<echo>phing symlink    - create symlinks to the core - ${path.core}</echo>
+		<echo>phing typo3temp  - create typo3temp directory</echo>
+		<echo>phing uploads    - fetch the files from the remote website</echo>
+		<echo>phing clean      - delete unnecessary files</echo>
+		<echo/>
+
+		<echo>---------------------------------------------</echo>
+		<echo>Convenience tasks</echo>
+		<echo>---------------------------------------------</echo>
+		<echo>phing initialize     - dump, localconf, htaccess, symlink, typo3temp, uploads</echo>
+		<!--<echo>phing push           - commit, use -Dmessage="my message"</echo>-->
+		<echo>phing test           - test the environment and the remote connection (not yet implemented)</echo>
+		<echo>phing help           - display this help message</echo>
+
+
+		<echo/>
+		<echo>---------------------------------------------</echo>
+		<echo>SVN tasks</echo>
+		<echo>---------------------------------------------</echo>
+		<echo>phing status-remote  - svn remote status (todo with git)</echo>
+		<echo>phing diff-remote    - svn remote diff (todo with git)</echo>
+
+		<echo/>
+		<echo>---------------------------------------------</echo>
+		<echo>Possible option</echo>
+		<echo>---------------------------------------------</echo>
+		<echo>-DdryRun=true        - will display the command to be executed</echo>
+	</target>
+
+
+	<!--
+		==============================================
+		entry point
+		==============================================
+	-->
+	<target name="initialize" depends="dump, localconf, htaccess, symlink, typo3temp, uploads"/>
+
+	<!--
+		==============================================
+		Svn Diff Remote
+		==============================================
+	-->
+	<target name="diff-remote" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Making diff remote         |</echo>
+		<echo>-----------------------------</echo>
+		<svnDiffRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
+	</target>
+
+	<!--
+		==============================================
+		Svn Remote Status
+		==============================================
+	-->
+	<target name="status-remote" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Checking remote status    |</echo>
+		<echo>-----------------------------</echo>
+		<svnStatusRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
+	</target>
+
+	<!--
+		==============================================
+		Dump database
+		==============================================
+	-->
+	<target name="dump" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Dump database              |</echo>
+		<echo>-----------------------------</echo>
+
+		<echo>Dumping remote database...</echo>
+
+		<dumpRemote
+			credentials="${server.credentials}"
+			directory="${site.remote.directory.temp}"
+			database="${database.remote.name}"
+			username="${database.remote.username}"
+			password="${database.remote.password}"
+			additionalIgnoreTables="tx_realurl_chashcache, tx_realurl_errorlog, tx_realurl_pathcache,
+									tx_realurl_redirects, tx_realurl_uniqalias , tx_realurl_urldecodecache, tx_realurl_urlencodecache
+									"
+			/>
+
+		<echo>Fetching dump...</echo>
+		<rsync credentials="${server.credentials}" remoteDirectory="${site.remote.directory.temp}${database.remote.name}.bz2" localDirectory="${site.local.directory}"/>
+
+		<echo>Extracting file...</echo>
+		<commandLocal command="tar -C ${site.local.directory} -xjf ${site.local.directory}${database.remote.name}.bz2"/>
+
+		<echo>Import dump...</echo>
+		<commandLocal command="${mysql.local} ${database.local.name} &lt; ${site.local.directory}${database.remote.name}.sql"/>
+
+
+		<echo>Fine tunes database...</echo>
+		<commandLocal command="${mysql.local} -e &quot;UPDATE sys_domain SET domainName = REPLACE(domainName, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+		<commandLocal command="${mysql.local} -e &quot;UPDATE sys_template SET title = REPLACE(title, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+		<commandLocal command="${mysql.local} -e &quot;UPDATE sys_template SET config = REPLACE(config, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+		<commandLocal command="${mysql.local} -e &quot;UPDATE sys_template SET constants = REPLACE(constants, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+		<commandLocal command="${mysql.local} -e &quot;UPDATE pages SET title = REPLACE(title, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+
+		<!-- reset database password for admin user -->
+		<commandLocal command="${mysql.local} -e &quot;UPDATE be_users SET username = 'admin', password = '5f4dcc3b5aa765d61d8327deb882cf99' WHERE username = 'ecoadmin';&quot; ${database.local.name}"/>
+
+		<echo>Clean up environment...</echo>
+		<commandLocal command="rm -f ${site.local.directory}${database.remote.name}.bz2"/>
+		<commandLocal command="rm -f ${site.local.directory}${database.remote.name}.sql"/>
+
+		<commandRemote credentials="${server.credentials}" command="rm ${site.remote.directory.temp}${database.remote.name}.sql"/>
+		<commandRemote credentials="${server.credentials}" command="rm ${site.remote.directory.temp}${database.remote.name}.bz2"/>
+	</target>
+
+	<!--
+		==============================================
+		Synchronize source code
+		==============================================
+	-->
+	<target name="clean" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Clean up                  |</echo>
+		<echo>-----------------------------</echo>
+		<echo>Deleting temporary files...</echo>
+		<delete>
+			<fileset refid="typo3temp"/>
+			<fileset refid="typo3conf"/>
+		</delete>
+	</target>
+
+	<!--
+		==============================================
+		Synchronize source code
+		==============================================
+	-->
+	<target name="uploads" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Fetch media files         |</echo>
+		<echo>-----------------------------</echo>
+		<echo>fetching files 1/2...</echo>
+		<rsync
+			credentials="${server.credentials}"
+			remoteDirectory="${site.remote.directory}fileadmin/user_upload/resources"
+			localDirectory="${site.local.directory}fileadmin/user_upload"/>
+
+		<echo>fetching files 2/2...</echo>
+		<rsync
+			credentials="${server.credentials}"
+			remoteDirectory="${site.remote.directory}uploads"
+			localDirectory="${site.local.directory}"/>
+
+	</target>
+
+	<!-- ============================================== -->
+	<target name="localconf" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| localconf.php              |</echo>
+		<echo>-----------------------------</echo>
+		<echo>Fetching file...</echo>
+		<commandLocal command="scp -q ${server.credentials}:${site.remote.directory}typo3conf/localconf.php ${site.local.directory}htdocs/typo3conf/localconf.php"/>
+
+		<echo>Updating localconf...</echo>
+		<localconfFinisher
+			directory="${site.local.directory}"
+			database="${database.local.name}"
+			username="${database.local.username}"
+			password="${database.local.password}"
+			host="${database.local.host}"/>
+	</target>
+
+	<!-- ============================================== -->
+	<target name="htaccess" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| .htaccess                  |</echo>
+		<echo>-----------------------------</echo>
+		<echo>Fetching file...</echo>
+		<commandLocal command="scp -q ${server.credentials}:${site.remote.directory}.htaccess ${site.local.directory}/"/>
+	</target>
+
+	<!-- ============================================== -->
+	<target name="symlink" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Symlink                   |</echo>
+		<echo>-----------------------------</echo>
+		<echo>Creating symlink...</echo>
+		<delete	file="${site.local.directory}typo3_src"/>
+		<symlink target="${path.core}" link="${site.local.directory}htdocs/typo3_src" />
+	</target>
+
+	<target name="typo3temp" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| typo3temp                   |</echo>
+		<echo>-----------------------------</echo>
+		<echo>Creating typo3temp...</echo>
+		<mkdir dir="${site.local.directory}typo3temp" />
+	</target>
+
+	<!--
+		==============================================
+		Test the environment
+		==============================================
+	-->
+	<target name="test" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Test environment           |</echo>
+		<echo>-----------------------------</echo>
+		<echo>Not yet implemented</echo>
+	</target>
+
+</project>
