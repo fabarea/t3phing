@@ -1,31 +1,39 @@
 <?xml version="1.0"?>
 <project name="main" basedir="." default="help"  description="Fetches the data from a remote website">
 
+	<!--
+		MANUAL STEPS
+		- git clone HOST LOCALNAME
+		- git submodule init
+		- create entry in /etc/hosts
+		- create new virtual host
+		- create new database
+	-->
+
 	<!-- FLAGS -->
 	<property name="dryRun" value="${dryRun}"/>
 
 	<!-- REMOTE PROPERTY -->
-	<property name="domain.remote" value="ichtus.ch"/>
-	<property name="site.remote.directory" value="REPLACE_ME/"/>
+	<property name="domain.remote" value="REPLACE_DOMAIN_REMOTE"/>
+	<property name="site.remote.directory" value="/sites/REPLACE_DOMAIN_REMOTE/htdocs/"/>
 	<property name="site.remote.directory.temp" value="/tmp/"/>
-	<property name="server.credentials" value="REPLACE_ME"/>
-	<property name="database.remote.name" value="REPLACE_ME"/>
-	<property name="database.remote.username" value="REPLACE_ME"/>
-	<property name="database.remote.password" value=""/>
+	<property name="server.credentials" value="REPLACE_CREDENTIALS"/>
+	<property name="database.remote.name" value="REPLACE_DATABASE_REMOTE"/>
+	<property name="database.remote.username" value="REPLACE_DATABASE_REMOTE"/>
+	<property name="database.remote.password" value="REPLACE_DATABASE_PASSWORD_REMOTE"/>
 
 	<!-- LOCAL PROPERTY -->
-	<property name="domain.local" value="REPLACE_ME"/>
-	<property name="site.local.directory" value="REPLACE_ME/"/>
-	<property name="directory.web" value="htdocs/"/>
+	<property name="domain.local" value="REPLACE_DOMAIN_LOCAL"/>
+	<property name="site.local.directory" value="PATH_LOCAL/REPLACE_DOMAIN_LOCAL/htdocs/"/>
 	<property name="path.core" value="/t3core/typo3_src-4.5.git"/>
-	<property name="database.local.name" value="REPLACE_ME"/>
-	<property name="database.local.username" value="REPLACE_ME"/>
-	<property name="database.local.password" value="REPLACE_ME"/>
+	<property name="database.local.name" value="REPLACE_DATABASE_LOCAL"/>
+	<property name="database.local.username" value="root"/>
+	<property name="database.local.password" value="root"/>
 	<property name="database.local.host" value="127.0.0.1"/>
 
 	<!-- RUNNING VARIABLES -->
-	<property name="command.local.mysql" value="REPLACE_ME"/>
-	<property name="t3phing.home" value="REPLACE_ME/"/>
-	
+	<property name="command.local.mysql" value="REPLACE_COMMAND"/>
+	<property name="t3phing.home" value="REPLACE_HOME/"/>
+
 	<import file="${t3phing.home}/Tasks/Common.xml"/>
 </project>
