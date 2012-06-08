@@ -4,13 +4,13 @@
 	<property name="mysql.local" value="${command.local.mysql} -u ${database.local.username} -p${database.local.password}"/>
 
 	<!-- FILE SET -->
-	<fileset dir="${site.local.directory}htdoc/typo3temp" id="typo3temp">
+	<fileset dir="${site.local.directory}typo3temp" id="typo3temp">
 		<include name="compressor/**"/>
 		<include name="sprites/**"/>
 		<include name="*.js"/>
 		<include name="*.css"/>
 	</fileset>
-	<fileset dir="${site.local.directory}htdoc/typo3conf" id="typo3conf">
+	<fileset dir="${site.local.directory}typo3conf" id="typo3conf">
 		<include name="temp*"/>
 		<include name="*.log"/>
 	</fileset>
@@ -196,7 +196,7 @@
 		<echo>| localconf.php              |</echo>
 		<echo>-----------------------------</echo>
 		<echo>Fetching file...</echo>
-		<commandLocal command="scp -q ${server.credentials}:${site.remote.directory}typo3conf/localconf.php ${site.local.directory}${directory.web}typo3conf/localconf.php"/>
+		<commandLocal command="scp -q ${server.credentials}:${site.remote.directory}typo3conf/localconf.php ${site.local.directory}typo3conf/localconf.php"/>
 
 		<echo>Updating localconf...</echo>
 		<localconfFinisher
@@ -223,7 +223,7 @@
 		<echo>-----------------------------</echo>
 		<echo>Creating symlink...</echo>
 		<delete	file="${site.local.directory}typo3_src"/>
-		<symlink target="${path.core}" link="${site.local.directory}${directory.web}typo3_src" />
+		<symlink target="${path.core}" link="${site.local.directory}typo3_src" />
 	</target>
 
 	<target name="typo3temp" depends="">
