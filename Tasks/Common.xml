@@ -36,19 +36,20 @@
 	<target name="help">
 		<echo>Usage of this Phing:</echo>
 		<echo/>
-		<echo>phing dump       - fetch the database and build it again locally</echo>
-		<echo>phing localconf  - fetch localconf.php and add custom values</echo>
-		<echo>phing htaccess   - fetch the htaccess from the remote server</echo>
-		<echo>phing symlink    - create symlinks to the core - ${path.core}</echo>
-		<echo>phing typo3temp  - create typo3temp directory</echo>
-		<echo>phing uploads    - fetch the files from the remote website</echo>
-		<echo>phing clean      - delete unnecessary files</echo>
+		<echo>phing dump            - fetch the database and build it again locally</echo>
+		<echo>phing localconf       - fetch localconf.php and add custom values</echo>
+		<echo>phing htaccess        - fetch the htaccess from the remote server</echo>
+		<echo>phing symlink         - create symlinks to the core - ${path.core}</echo>
+		<echo>phing typo3temp       - create typo3temp directory</echo>
+		<echo>phing uploads         - fetch uploads folder</echo>
+		<echo>phing user_upload     - fetch user_upload folder</echo>
+		<echo>phing clean           - delete unnecessary files</echo>
 		<echo/>
 
 		<echo>---------------------------------------------</echo>
 		<echo>Convenience tasks</echo>
 		<echo>---------------------------------------------</echo>
-		<echo>phing initialize     - dump, localconf, htaccess, symlink, typo3temp, uploads</echo>
+		<echo>phing initialize     - dump, localconf, htaccess, symlink, typo3temp, uploads, user_upload</echo>
 		<!--<echo>phing push           - commit, use -Dmessage="my message"</echo>-->
 		<echo>phing test           - test the environment and the remote connection (not yet implemented)</echo>
 		<echo>phing help           - display this help message</echo>
@@ -74,7 +75,7 @@
 		entry point
 		==============================================
 	-->
-	<target name="initialize" depends="dump, localconf, htaccess, symlink, typo3temp, uploads"/>
+	<target name="initialize" depends="dump, localconf, htaccess, symlink, typo3temp, uploads, user_upload"/>
 
 	<!--
 		==============================================
@@ -169,25 +170,30 @@
 
 	<!--
 		==============================================
-		Synchronize source code
+		Synchronize files
 		==============================================
 	-->
 	<target name="uploads" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Fetch media files         |</echo>
+		<echo>| Fetch uploads|</echo>
 		<echo>-----------------------------</echo>
-		<echo>fetching files 1/2...</echo>
+		<echo>fetching files...</echo>
 		<rsync
-			credentials="${server.credentials}"
-			remoteDirectory="${site.remote.directory}fileadmin/user_upload/resources"
-			localDirectory="${site.local.directory}fileadmin/user_upload"/>
+				credentials="${server.credentials}"
+				remoteDirectory="${site.remote.directory}uploads"
+				localDirectory="${site.local.directory}"/>
 
-		<echo>fetching files 2/2...</echo>
+	</target>
+
+	<target name="user_upload" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Fetch resources files |</echo>
+		<echo>-----------------------------</echo>
+		<echo>fetching files...</echo>
 		<rsync
-			credentials="${server.credentials}"
-			remoteDirectory="${site.remote.directory}uploads"
-			localDirectory="${site.local.directory}"/>
-
+				credentials="${server.credentials}"
+				remoteDirectory="${site.remote.directory}fileadmin/user_upload"
+				localDirectory="${site.local.directory}fileadmin"/>
 	</target>
 
 	<!-- ============================================== -->
