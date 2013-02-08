@@ -36,12 +36,14 @@
 	<target name="help">
 		<echo>Usage of this Phing:</echo>
 		<echo/>
+		<echo>phing dump6           - fetch the database and build it again locally for TYPO3 6.0</echo>
 		<echo>phing dump            - fetch the database and build it again locally</echo>
 		<echo>phing localconf       - fetch localconf.php and add custom values</echo>
 		<echo>phing htaccess        - fetch the htaccess from the remote server</echo>
 		<echo>phing symlink         - create symlinks to the core - ${path.core}</echo>
 		<echo>phing typo3temp       - create typo3temp directory</echo>
 		<echo>phing uploads         - fetch uploads folder</echo>
+		<echo>phing fileadmin       - fetch fileadmin</echo>
 		<echo>phing user_upload     - fetch user_upload folder</echo>
 		<echo>phing clean           - delete unnecessary files</echo>
 		<echo/>
@@ -76,6 +78,7 @@
 		==============================================
 	-->
 	<target name="initialize" depends="dump, localconf, htaccess, symlink, typo3temp, uploads, user_upload"/>
+	<target name="initialize6" depends="dump6, htaccess, symlink, typo3temp, uploads, fileadmin"/>
 
 	<!--
 		==============================================
@@ -120,7 +123,8 @@
 			username="${database.remote.username}"
 			password="${database.remote.password}"
 			additionalIgnoreTables="tx_realurl_chashcache, tx_realurl_errorlog, tx_realurl_pathcache,
-									tx_realurl_redirects, tx_realurl_uniqalias , tx_realurl_urldecodecache, tx_realurl_urlencodecache
+									tx_realurl_redirects, tx_realurl_uniqalias , tx_realurl_urldecodecache, tx_realurl_urlencodecache,
+									cache_extensions
 									"
 			/>
 
@@ -150,6 +154,74 @@
 
 		<commandRemote credentials="${server.credentials}" command="rm ${site.remote.directory.temp}${database.remote.name}.sql"/>
 		<commandRemote credentials="${server.credentials}" command="rm ${site.remote.directory.temp}${database.remote.name}.bz2"/>
+	</target>
+
+
+	<target name="dump6" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Dump database |</echo>
+		<echo>-----------------------------</echo>
+		<echo>Dumping remote database...</echo>
+
+		<dumpRemote
+				credentials="${server.credentials}"
+				directory="${site.remote.directory.temp}"
+				database="${database.remote.name}"
+				username="${database.remote.username}"
+				password="${database.remote.password}"
+				additionalIgnoreTables="tx_realurl_chashcache, tx_realurl_errorlog, tx_realurl_pathcache,
+									tx_realurl_redirects, tx_realurl_uniqalias , tx_realurl_urldecodecache, tx_realurl_urlencodecache,
+									tx_extensionmanager_domain_model_extension
+									"
+				/>
+
+		<echo>Fetching dump...</echo>
+		<rsync credentials="${server.credentials}" remoteDirectory="${site.remote.directory.temp}${database.remote.name}.bz2"
+		       localDirectory="${site.local.directory}"/>
+
+		<echo>Extracting file...</echo>
+		<commandLocal command="tar -C ${site.local.directory} -xjf ${site.local.directory}${database.remote.name}.bz2"/>
+
+		<echo>Import dump...</echo>
+		<commandLocal command="${mysql.local} ${database.local.name} &lt; ${site.local.directory}${database.remote.name}.sql"/>
+
+
+		<echo>Fine tunes database...</echo>
+		<commandLocal
+				command="${mysql.local} -e &quot;UPDATE sys_domain SET domainName = REPLACE(domainName, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+		<commandLocal
+				command="${mysql.local} -e &quot;UPDATE sys_template SET title = REPLACE(title, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+		<commandLocal
+				command="${mysql.local} -e &quot;UPDATE sys_template SET config = REPLACE(config, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+		<commandLocal
+				command="${mysql.local} -e &quot;UPDATE sys_template SET constants = REPLACE(constants, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+		<commandLocal
+				command="${mysql.local} -e &quot;UPDATE pages SET title = REPLACE(title, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+
+		<!-- reset database password for admin user -->
+		<commandLocal
+				command="${mysql.local} -e &quot;UPDATE be_users SET username = 'admin', password = '5f4dcc3b5aa765d61d8327deb882cf99' WHERE username = 'ecoadmin';&quot; ${database.local.name}"/>
+
+		<echo>Clean up environment...</echo>
+		<commandLocal command="rm -f ${site.local.directory}${database.remote.name}.bz2"/>
+		<commandLocal command="rm -f ${site.local.directory}${database.remote.name}.sql"/>
+
+		<commandRemote credentials="${server.credentials}" command="rm ${site.remote.directory.temp}${database.remote.name}.sql"/>
+		<commandRemote credentials="${server.credentials}" command="rm ${site.remote.directory.temp}${database.remote.name}.bz2"/>
+
+
+		<echo>Writing local credential...</echo>
+		<echo file="private/Database.php" append="false"><![CDATA[<?php
+
+// database credentials
+$GLOBALS['TYPO3_CONF_VARS']['DB']['database'] = '${database.local.name}';
+$GLOBALS['TYPO3_CONF_VARS']['DB']['password'] = '${database.local.password}';
+$GLOBALS['TYPO3_CONF_VARS']['DB']['username'] = '${database.local.username}';
+$GLOBALS['TYPO3_CONF_VARS']['DB']['host'] = '${database.local.host}';
+
+?>]]>
+		</echo>
+
 	</target>
 
 	<!--
@@ -187,13 +259,24 @@
 
 	<target name="user_upload" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Fetch resources files |</echo>
+		<echo>| Fetch resources files      |</echo>
 		<echo>-----------------------------</echo>
 		<echo>fetching files...</echo>
 		<rsync
 				credentials="${server.credentials}"
 				remoteDirectory="${site.remote.directory}fileadmin/user_upload"
 				localDirectory="${site.local.directory}fileadmin"/>
+	</target>
+
+	<target name="fileadmin" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Fetch fileadmin files      |</echo>
+		<echo>-----------------------------</echo>
+		<echo>fetching files...</echo>
+		<rsync
+				credentials="${server.credentials}"
+				remoteDirectory="${site.remote.directory}fileadmin"
+				localDirectory="${site.local.directory}"/>
 	</target>
 
 	<!-- ============================================== -->

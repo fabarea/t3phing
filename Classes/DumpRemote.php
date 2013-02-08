@@ -41,11 +41,36 @@ class DumpRemote extends BaseTask {
 	protected $directory = '';
 
 	/**
+	 * @var string
+	 */
+	protected $host = '';
+
+	/**
 	 * @var array
 	 */
 	protected $additionalIgnoreTables = array();
 
-    /**
+	/**
+	 * @var string
+	 */
+	protected $password = '';
+
+	/**
+	 * @var string
+	 */
+	protected $username = '';
+
+	/**
+	 * @var string
+	 */
+	protected $database = '';
+
+	/**
+	 * @var array
+	 */
+	protected $properties = array();
+
+	/**
      * Main entry point.
 	 *
      * @return void
@@ -55,17 +80,14 @@ class DumpRemote extends BaseTask {
 		// Initialize task
 		$this->initialize();
 
-		$tables[] = 'cache_extensions';
-		$tables[] = 'cache_hash';
 		$tables[] = 'cache_imagesizes';
 		$tables[] = 'cache_md5params';
-		$tables[] = 'cache_pages';
-		$tables[] = 'cache_pagesection';
 		$tables[] = 'cache_treelist';
 		$tables[] = 'cache_typo3temp_log';
 		$tables[] = 'sys_log';
 
 		$tables = array_merge($tables, $this->additionalIgnoreTables);
+	    $options = '';
 		foreach ($tables as $table) {
 			$options .= " --ignore-table=" . $this->database . "." . $table;
 		}
@@ -73,11 +95,15 @@ class DumpRemote extends BaseTask {
 		// commands that will retrieve the status of the remote working copy
 		$command = 'ssh ' . $this->credentials . " '";
 
+	    if (! empty($this->host)) {
+	        $this->host = ' -h ' . $this->host;
+	    }
+
 		// creates a light dump of the database
-		$command .= "mysqldump -u " . $this->username . " -p" . $this->password . " -e -Q " . $options . " " . $this->database . " > " . $this->directory .  $this->database . ".sql ; ";
+		$command .= "mysqldump -u " . $this->username . " -p" . $this->password . $this->host . " -e -Q " . $options . " " . $this->database . " > " . $this->directory .  $this->database . ".sql ; ";
 
 		// creates a dump of cache tables
-		$command .= "mysqldump -u " . $this->username . " -p" . $this->password . " -e -Q --no-data " . $this->database . ' ' . implode(' ', $tables) . " >> " . $this->directory .  $this->database . ".sql ; ";
+		$command .= "mysqldump -u " . $this->username . " -p" . $this->password . $this->host . " -e -Q --no-data " . $this->database . ' ' . implode(' ', $tables) . " >> " . $this->directory .  $this->database . ".sql ; ";
 
 		$command .= "cd " . $this->directory . " ; ";
 		$command .= "tar -cjf ".  $this->database . ".bz2 " . $this->database . ".sql ; ";
@@ -140,23 +166,23 @@ class DumpRemote extends BaseTask {
     }
 
     /**
-     * Set the password
-	 *
-     * @param string $value
-     * @return void
-     */
-    public function setHost($value){
-        $this->host = $value;
-    }
-
-    /**
      * Set the credentials information
 	 *
      * @param string $value
      * @return void
      */
     public function setCredentials($value){
-        $this->credentials = $value;
+	    $this->credentials = $value;
+    }
+
+    /**
+     * Set the host
+	 *
+     * @param string $value
+     * @return void
+     */
+    public function setHost($value){
+        $this->host = $value;
     }
 
     /**
