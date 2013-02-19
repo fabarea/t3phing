@@ -38,7 +38,7 @@
 		<echo/>
 		<echo>phing dump6           - fetch the database and build it again locally for TYPO3 6.0</echo>
 		<echo>phing dump            - fetch the database and build it again locally</echo>
-		<echo>phing localconf       - fetch localconf.php and add custom values</echo>
+		<echo>phing localconf       - fetch localconf.php and add custom values - OBSOLETE WITH TYPO3 6.0</echo>
 		<echo>phing htaccess        - fetch the htaccess from the remote server</echo>
 		<echo>phing symlink         - create symlinks to the core - ${path.core}</echo>
 		<echo>phing typo3temp       - create typo3temp directory</echo>
@@ -52,6 +52,7 @@
 		<echo>Convenience tasks</echo>
 		<echo>---------------------------------------------</echo>
 		<echo>phing initialize     - dump, localconf, htaccess, symlink, typo3temp, uploads, user_upload</echo>
+		<echo>phing initialize6    - dump6, htaccess, symlink, uploads, fileadmin</echo>
 		<!--<echo>phing push           - commit, use -Dmessage="my message"</echo>-->
 		<echo>phing test           - test the environment and the remote connection (not yet implemented)</echo>
 		<echo>phing help           - display this help message</echo>
@@ -78,7 +79,7 @@
 		==============================================
 	-->
 	<target name="initialize" depends="dump, localconf, htaccess, symlink, typo3temp, uploads, user_upload"/>
-	<target name="initialize6" depends="dump6, htaccess, symlink, typo3temp, uploads, fileadmin"/>
+	<target name="initialize6" depends="dump6, htaccess, symlink, uploads, fileadmin"/>
 
 	<!--
 		==============================================
@@ -218,9 +219,7 @@ $GLOBALS['TYPO3_CONF_VARS']['DB']['database'] = '${database.local.name}';
 $GLOBALS['TYPO3_CONF_VARS']['DB']['password'] = '${database.local.password}';
 $GLOBALS['TYPO3_CONF_VARS']['DB']['username'] = '${database.local.username}';
 $GLOBALS['TYPO3_CONF_VARS']['DB']['host'] = '${database.local.host}';
-
-?>]]>
-		</echo>
+?>]]></echo>
 
 	</target>
 
