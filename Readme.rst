@@ -22,16 +22,8 @@ $> phing
      [echo] ---------------------------------------------
      [echo] phing initialize     - dump, localconf, htaccess, symlink, typo3temp, uploads, user_upload
      [echo] phing initialize6    - dump6, htaccess, symlink, uploads, fileadmin
-     [echo] phing test           - test the environment and the remote connection (not yet implemented)
      [echo] phing help           - display this help message
      [echo] 
-     [echo] ---------------------------------------------
-     [echo] SVN tasks
-     [echo] ---------------------------------------------
-     [echo] phing status-remote  - svn remote status (todo with git)
-     [echo] phing diff-remote    - svn remote diff (todo with git)
-     [echo] 
-     [echo] ---------------------------------------------
      [echo] Possible option
      [echo] ---------------------------------------------
      [echo] -DdryRun=true        - will display the command to be executed
