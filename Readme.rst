@@ -5,6 +5,8 @@ Usage:
 
 ::
 
+     $> phing
+
      [echo] Usage of this Phing:
      [echo] 
      [echo] phing dump6           - fetch the database and build it again locally for TYPO3 6.0
