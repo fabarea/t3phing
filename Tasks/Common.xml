@@ -219,6 +219,9 @@ $GLOBALS['TYPO3_CONF_VARS']['DB']['database'] = '${database.local.name}';
 $GLOBALS['TYPO3_CONF_VARS']['DB']['password'] = '${database.local.password}';
 $GLOBALS['TYPO3_CONF_VARS']['DB']['username'] = '${database.local.username}';
 $GLOBALS['TYPO3_CONF_VARS']['DB']['host'] = '${database.local.host}';
+
+// password for all installToolPassword
+$GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d8327deb882cf99';
 ?>]]></echo>
 
 	</target>
