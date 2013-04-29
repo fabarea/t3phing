@@ -57,7 +57,7 @@ class Rsync extends BaseTask {
 		}
 		
 		// commands that will retrieve the status of the remote working copy
-		$command = "rsync -a " . $this->credentials . ':' . $this->remoteDirectory . ' ' . $this->localDirectory;
+		$command = "rsync -a --delete " . $this->credentials . ':' . $this->remoteDirectory . ' ' . $this->localDirectory;
 
 		// if dryRun is set then, the command line is printed out
 		if ($this->properties['dryRun'] === 'true' || $this->properties['dryRun'] === TRUE) {
