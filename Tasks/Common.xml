@@ -212,7 +212,7 @@
 
 
 		<echo>Writing local credential...</echo>
-		<echo file="private/Database.php" append="false"><![CDATA[<?php
+		<echo file="configuration/Settings.php" append="false"><![CDATA[<?php
 
 // database credentials
 $GLOBALS['TYPO3_CONF_VARS']['DB']['database'] = '${database.local.name}';
