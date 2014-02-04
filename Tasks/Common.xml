@@ -27,6 +27,8 @@
 	<taskdef name="dumpRemote" classname="DumpRemote" classpathref="t3phing.classes"/>
 	<taskdef name="commandRemote" classname="CommandRemote" classpathref="t3phing.classes"/>
 	<taskdef name="commandLocal" classname="CommandLocal" classpathref="t3phing.classes"/>
+	<taskdef name="gitStatusRemote" classname="GitStatusRemote" classpathref="t3phing.classes"/>
+	<taskdef name="gitDiffRemote" classname="GitDiffRemote" classpathref="t3phing.classes"/>
 
 	<!--
 		==============================================
@@ -60,10 +62,10 @@
 
 		<echo/>
 		<echo>---------------------------------------------</echo>
-		<echo>SVN tasks</echo>
+		<echo>Git tasks</echo>
 		<echo>---------------------------------------------</echo>
-		<echo>phing status-remote  - svn remote status (todo with git)</echo>
-		<echo>phing diff-remote    - svn remote diff (todo with git)</echo>
+		<echo>phing st             - git remote status</echo>
+		<echo>phing df             - git remote diff</echo>
 
 		<echo/>
 		<echo>---------------------------------------------</echo>
@@ -83,26 +85,28 @@
 
 	<!--
 		==============================================
-		Svn Diff Remote
+		Git Diff Remote
 		==============================================
 	-->
-	<target name="diff-remote" depends="">
+	<target name="df" depends="diff" />
+	<target name="diff" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Making diff remote         |</echo>
+		<echo>| Remote diff                |</echo>
 		<echo>-----------------------------</echo>
-		<svnDiffRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
+		<gitDiffRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
 	</target>
 
 	<!--
 		==============================================
-		Svn Remote Status
+		Git Remote Status
 		==============================================
 	-->
-	<target name="status-remote" depends="">
+	<target name="st" depends="status" />
+	<target name="status" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Checking remote status    |</echo>
+		<echo>| Remote status              |</echo>
 		<echo>-----------------------------</echo>
-		<svnStatusRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
+		<gitStatusRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
 	</target>
 
 	<!--

@@ -20,7 +20,7 @@
 
 /**
  * This class is used to get the status of remote source code
- * 
+ *
  * @author Fabien Udriot <fabien.udriot@ecodev.ch>
  *
  * $Id: CheckRemote.php 2392 2011-02-15 16:28:16Z fab1en $
@@ -28,18 +28,18 @@
 
 require_once('BaseTask.php');
 
-class SvnStatusRemote extends BaseTask {
-	
+class GitDiffRemote extends BaseTask {
+
 	/**
 	 * @var string
 	 */
 	protected $credentials = '';
-	
+
 	/**
 	 * @var string
 	 */
 	protected $directory = '';
-	
+
     /**
      * Main entry point.
 	 *
@@ -56,31 +56,23 @@ class SvnStatusRemote extends BaseTask {
 		}
 
 		// commands that will retrieve the status of the remote working copy
-		$command = 'ssh ' . $this->credentials . " 'svn status " . $this->directory . "'";
+	    $command = sprintf("ssh %s 'cd %s; /usr/local/git/bin/git diff'",
+		    $this->credentials,
+		    $this->directory
+	    );
 
-		// default value for $results
+	    // default value for $results
 		$results = array();
-		
+
 		// if dryRun is set then, the command line is printed out
 		if ($this->properties['dryRun'] === 'true' || $this->properties['dryRun'] === TRUE) {
 			$this->log($command);
 		}
 		else {
 			$results = $this->execute($command);
-		}
-		
-		// analyse the result
-		$output = array();
-		foreach ($results as $result) {
-			if (preg_match('/^M /i', $result)) {
-				$output[] = $result;
-			}
+			$this->log($results);
 		}
 
-		if (! empty($output)) {
-			$this->log($output);
-		}
-		
 	}
 
 	// -------------------------------
@@ -94,6 +86,7 @@ class SvnStatusRemote extends BaseTask {
      * @return void
      */
     public function setDirectory($value){
+	    $value = str_replace('/htdocs', '', $value);
         $this->directory = $value;
     }
 
