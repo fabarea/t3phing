@@ -139,9 +139,12 @@
 		<echo>Extracting file...</echo>
 		<commandLocal command="tar -C ${site.local.directory} -xjf ${site.local.directory}${database.remote.name}.bz2"/>
 
+		<echo>Reset database...</echo>
+		<commandLocal
+				command="${mysql.local} -e &quot;DROP DATABASE ${database.local.name}; CREATE DATABASE ${database.local.name};&quot;"/>
+
 		<echo>Import dump...</echo>
 		<commandLocal command="${mysql.local} ${database.local.name} &lt; ${site.local.directory}${database.remote.name}.sql"/>
-
 
 		<echo>Fine tunes database...</echo>
 		<commandLocal command="${mysql.local} -e &quot;UPDATE sys_domain SET domainName = REPLACE(domainName, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
@@ -186,6 +189,10 @@
 
 		<echo>Extracting file...</echo>
 		<commandLocal command="tar -C ${site.local.directory} -xjf ${site.local.directory}${database.remote.name}.bz2"/>
+
+		<echo>Reset database...</echo>
+		<commandLocal
+				command="${mysql.local} -e &quot;DROP DATABASE ${database.local.name}; CREATE DATABASE ${database.local.name};&quot;"/>
 
 		<echo>Import dump...</echo>
 		<commandLocal command="${mysql.local} ${database.local.name} &lt; ${site.local.directory}${database.remote.name}.sql"/>
