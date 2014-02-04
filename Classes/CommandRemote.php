@@ -19,22 +19,17 @@
 ***************************************************************/
 
 /**
- * This class is used to get the status of remote source code
- * 
- * @author Fabien Udriot <fabien.udriot@ecodev.ch>
- *
- * $Id: CheckRemote.php 2392 2011-02-15 16:28:16Z fab1en $
+ * This class is used to run remote command
  */
-
 require_once('BaseTask.php');
 
 class CommandRemote extends BaseTask {
-	
+
 	/**
 	 * @var string
 	 */
 	protected $credentials = '';
-	
+
 	/**
 	 * @var string
 	 */
@@ -95,5 +90,3 @@ class CommandRemote extends BaseTask {
     }
 
 }
-
-?>
