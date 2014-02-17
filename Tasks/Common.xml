@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="imported task" basedir="." default=""  description="">
+<project name="imported task" basedir="." default="" description="">
 
 	<property name="mysql.local" value="${command.local.mysql} -u ${database.local.username} -p${database.local.password}"/>
 
@@ -44,7 +44,7 @@
 		<echo>phing uploads         - fetch uploads folder</echo>
 		<echo>phing fileadmin       - fetch fileadmin</echo>
 		<echo>phing user_upload     - fetch user_upload folder</echo>
-		<echo>phing clear_cache     - delete unnecessary files</echo>
+		<echo>phing clear_cache     - flush temporary files along with database cache</echo>
 		<echo/>
 
 		<echo>---------------------------------------------</echo>
@@ -59,10 +59,18 @@
 
 		<echo/>
 		<echo>---------------------------------------------</echo>
-		<echo>Git tasks</echo>
+		<echo>Tasks executed on remote host</echo>
 		<echo>---------------------------------------------</echo>
-		<echo>phing st             - git remote status</echo>
-		<echo>phing df             - git remote diff</echo>
+		<echo>phing status             - git remote status</echo>
+		<echo>phing diff               - git remote diff</echo>
+
+		<echo/>
+		<echo>---------------------------------------------</echo>
+		<echo>Shortcut syntax</echo>
+		<echo>---------------------------------------------</echo>
+		<echo>phing st             - phing status</echo>
+		<echo>phing df             - phing diff</echo>
+		<echo>phing c              - phing clear_cache</echo>
 
 		<echo/>
 		<echo>---------------------------------------------</echo>
@@ -85,10 +93,10 @@
 		Git Diff Remote
 		==============================================
 	-->
-	<target name="df" depends="diff" />
+	<target name="df" depends="diff"/>
 	<target name="diff" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Remote diff                |</echo>
+		<echo>| Remote diff |</echo>
 		<echo>-----------------------------</echo>
 		<gitDiffRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
 	</target>
@@ -98,10 +106,10 @@
 		Git Remote Status
 		==============================================
 	-->
-	<target name="st" depends="status" />
+	<target name="st" depends="status"/>
 	<target name="status" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Remote status              |</echo>
+		<echo>| Remote status |</echo>
 		<echo>-----------------------------</echo>
 		<gitStatusRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
 	</target>
@@ -113,25 +121,26 @@
 	-->
 	<target name="dump" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Dump database              |</echo>
+		<echo>| Dump database |</echo>
 		<echo>-----------------------------</echo>
 
 		<echo>Dumping remote database...</echo>
 
 		<dumpRemote
-			credentials="${server.credentials}"
-			directory="${site.remote.directory.temp}"
-			database="${database.remote.name}"
-			username="${database.remote.username}"
-			password="${database.remote.password}"
-			additionalIgnoreTables="tx_realurl_chashcache, tx_realurl_errorlog, tx_realurl_pathcache,
+				credentials="${server.credentials}"
+				directory="${site.remote.directory.temp}"
+				database="${database.remote.name}"
+				username="${database.remote.username}"
+				password="${database.remote.password}"
+				additionalIgnoreTables="tx_realurl_chashcache, tx_realurl_errorlog, tx_realurl_pathcache,
 									tx_realurl_redirects, tx_realurl_uniqalias , tx_realurl_urldecodecache, tx_realurl_urlencodecache,
 									cache_extensions
 									"
-			/>
+				/>
 
 		<echo>Fetching dump...</echo>
-		<rsync credentials="${server.credentials}" remoteDirectory="${site.remote.directory.temp}${database.remote.name}.bz2" localDirectory="${site.local.directory}"/>
+		<rsync credentials="${server.credentials}" remoteDirectory="${site.remote.directory.temp}${database.remote.name}.bz2"
+		       localDirectory="${site.local.directory}"/>
 
 		<echo>Extracting file...</echo>
 		<commandLocal command="tar -C ${site.local.directory} -xjf ${site.local.directory}${database.remote.name}.bz2"/>
@@ -144,14 +153,20 @@
 		<commandLocal command="${mysql.local} ${database.local.name} &lt; ${site.local.directory}${database.remote.name}.sql"/>
 
 		<echo>Fine tunes database...</echo>
-		<commandLocal command="${mysql.local} -e &quot;UPDATE sys_domain SET domainName = REPLACE(domainName, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
-		<commandLocal command="${mysql.local} -e &quot;UPDATE sys_template SET title = REPLACE(title, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
-		<commandLocal command="${mysql.local} -e &quot;UPDATE sys_template SET config = REPLACE(config, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
-		<commandLocal command="${mysql.local} -e &quot;UPDATE sys_template SET constants = REPLACE(constants, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
-		<commandLocal command="${mysql.local} -e &quot;UPDATE pages SET title = REPLACE(title, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+		<commandLocal
+				command="${mysql.local} -e &quot;UPDATE sys_domain SET domainName = REPLACE(domainName, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+		<commandLocal
+				command="${mysql.local} -e &quot;UPDATE sys_template SET title = REPLACE(title, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+		<commandLocal
+				command="${mysql.local} -e &quot;UPDATE sys_template SET config = REPLACE(config, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+		<commandLocal
+				command="${mysql.local} -e &quot;UPDATE sys_template SET constants = REPLACE(constants, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+		<commandLocal
+				command="${mysql.local} -e &quot;UPDATE pages SET title = REPLACE(title, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
 
 		<!-- reset database password for admin user -->
-		<commandLocal command="${mysql.local} -e &quot;UPDATE be_users SET username = 'admin', password = '5f4dcc3b5aa765d61d8327deb882cf99' WHERE username = 'ecoadmin';&quot; ${database.local.name}"/>
+		<commandLocal
+				command="${mysql.local} -e &quot;UPDATE be_users SET username = 'admin', password = '5f4dcc3b5aa765d61d8327deb882cf99' WHERE username = 'ecoadmin';&quot; ${database.local.name}"/>
 
 		<echo>Clean up environment...</echo>
 		<commandLocal command="rm -f ${site.local.directory}${database.remote.name}.bz2"/>
@@ -168,13 +183,12 @@
 		<echo>-----------------------------</echo>
 		<echo>Dumping remote database...</echo>
 
-		<dumpRemote
-				credentials="${server.credentials}"
-				directory="${site.remote.directory.temp}"
-				database="${database.remote.name}"
-				username="${database.remote.username}"
-				password="${database.remote.password}"
-				additionalIgnoreTables="tx_realurl_chashcache, tx_realurl_errorlog, tx_realurl_pathcache,
+		<dumpRemote credentials="${server.credentials}"
+		            directory="${site.remote.directory.temp}"
+		            database="${database.remote.name}"
+		            username="${database.remote.username}"
+		            password="${database.remote.password}"
+		            additionalIgnoreTables="tx_realurl_chashcache, tx_realurl_errorlog, tx_realurl_pathcache,
 									tx_realurl_redirects, tx_realurl_uniqalias , tx_realurl_urldecodecache, tx_realurl_urlencodecache,
 									tx_extensionmanager_domain_model_extension
 									"
@@ -239,9 +253,10 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 		Synchronize source code
 		==============================================
 	-->
+	<target name="c" depends="clear_cache" />
 	<target name="clear_cache" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Deep cache clearing           |</echo>
+		<echo>| Deep cache clearing |</echo>
 		<echo>-----------------------------</echo>
 		<echo>Deleting temporary files...</echo>
 		<delete>
@@ -249,12 +264,8 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 			<fileset refid="typo3conf"/>
 		</delete>
 
-		<clearCache
-				database="${database.local.name}"
-				username="${database.local.username}"
-				password="${database.local.password}"
-				/>
-
+		<clearCache database="${database.local.name}" username="${database.local.username}"
+		            password="${database.local.password}"/>
 
 	</target>
 
@@ -268,56 +279,53 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 		<echo>| Fetch uploads|</echo>
 		<echo>-----------------------------</echo>
 		<echo>fetching files...</echo>
-		<rsync
-				credentials="${server.credentials}"
-				remoteDirectory="${site.remote.directory}uploads"
-				localDirectory="${site.local.directory}"/>
+		<rsync credentials="${server.credentials}"
+		       remoteDirectory="${site.remote.directory}uploads"
+		       localDirectory="${site.local.directory}"/>
 
 	</target>
 
 	<target name="user_upload" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Fetch resources files      |</echo>
+		<echo>| Fetch resources files |</echo>
 		<echo>-----------------------------</echo>
 		<echo>fetching files...</echo>
-		<rsync
-				credentials="${server.credentials}"
-				remoteDirectory="${site.remote.directory}fileadmin/user_upload"
-				localDirectory="${site.local.directory}fileadmin"/>
+		<rsync credentials="${server.credentials}"
+		       remoteDirectory="${site.remote.directory}fileadmin/user_upload"
+		       localDirectory="${site.local.directory}fileadmin"/>
 	</target>
 
 	<target name="fileadmin" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Fetch fileadmin files      |</echo>
+		<echo>| Fetch fileadmin files |</echo>
 		<echo>-----------------------------</echo>
 		<echo>fetching files...</echo>
-		<rsync
-				credentials="${server.credentials}"
-				remoteDirectory="${site.remote.directory}fileadmin"
-				localDirectory="${site.local.directory}"/>
+		<rsync credentials="${server.credentials}"
+		       remoteDirectory="${site.remote.directory}fileadmin"
+		       localDirectory="${site.local.directory}"/>
 	</target>
 
 	<!-- ============================================== -->
 	<target name="localconf" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| localconf.php              |</echo>
+		<echo>| localconf.php |</echo>
 		<echo>-----------------------------</echo>
 		<echo>Fetching file...</echo>
-		<commandLocal command="scp -q ${server.credentials}:${site.remote.directory}typo3conf/localconf.php ${site.local.directory}typo3conf/localconf.php"/>
+		<commandLocal
+				command="scp -q ${server.credentials}:${site.remote.directory}typo3conf/localconf.php ${site.local.directory}typo3conf/localconf.php"/>
 
 		<echo>Updating localconf...</echo>
-		<localconfFinisher
-			directory="${site.local.directory}"
-			database="${database.local.name}"
-			username="${database.local.username}"
-			password="${database.local.password}"
-			host="${database.local.host}"/>
+		<localconfFinisher directory="${site.local.directory}"
+		                   database="${database.local.name}"
+		                   username="${database.local.username}"
+		                   password="${database.local.password}"
+		                   host="${database.local.host}"/>
 	</target>
 
 	<!-- ============================================== -->
 	<target name="htaccess" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| .htaccess                  |</echo>
+		<echo>| .htaccess |</echo>
 		<echo>-----------------------------</echo>
 		<echo>Fetching file...</echo>
 		<commandLocal command="scp -q ${server.credentials}:${site.remote.directory}.htaccess ${site.local.directory}/"/>
@@ -326,19 +334,19 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 	<!-- ============================================== -->
 	<target name="symlink" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Symlink                   |</echo>
+		<echo>| Symlink |</echo>
 		<echo>-----------------------------</echo>
 		<echo>Creating symlink...</echo>
-		<delete	file="${site.local.directory}typo3_src"/>
-		<symlink target="${path.core}" link="${site.local.directory}typo3_src" />
+		<delete file="${site.local.directory}typo3_src"/>
+		<symlink target="${path.core}" link="${site.local.directory}typo3_src"/>
 	</target>
 
 	<target name="typo3temp" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| typo3temp                   |</echo>
+		<echo>| typo3temp |</echo>
 		<echo>-----------------------------</echo>
 		<echo>Creating typo3temp...</echo>
-		<mkdir dir="${site.local.directory}typo3temp" />
+		<mkdir dir="${site.local.directory}typo3temp"/>
 	</target>
 
 	<!--
@@ -348,7 +356,7 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 	-->
 	<target name="test" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Test environment           |</echo>
+		<echo>| Test environment |</echo>
 		<echo>-----------------------------</echo>
 		<echo>Not yet implemented</echo>
 	</target>
