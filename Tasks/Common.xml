@@ -5,13 +5,9 @@
 
 	<!-- FILE SET -->
 	<fileset dir="${site.local.directory}typo3temp" id="typo3temp">
-		<include name="compressor/**"/>
-		<include name="sprites/**"/>
-		<include name="*.js"/>
-		<include name="*.css"/>
+		<include name="**"/>
 	</fileset>
 	<fileset dir="${site.local.directory}typo3conf" id="typo3conf">
-		<include name="temp*"/>
 		<include name="*.log"/>
 	</fileset>
 	<path id="t3phing.classes">
@@ -29,6 +25,7 @@
 	<taskdef name="commandLocal" classname="CommandLocal" classpathref="t3phing.classes"/>
 	<taskdef name="gitStatusRemote" classname="GitStatusRemote" classpathref="t3phing.classes"/>
 	<taskdef name="gitDiffRemote" classname="GitDiffRemote" classpathref="t3phing.classes"/>
+	<taskdef name="clearCache" classname="ClearCacheTask" classpathref="t3phing.classes"/>
 
 	<!--
 		==============================================
@@ -47,7 +44,7 @@
 		<echo>phing uploads         - fetch uploads folder</echo>
 		<echo>phing fileadmin       - fetch fileadmin</echo>
 		<echo>phing user_upload     - fetch user_upload folder</echo>
-		<echo>phing clean           - delete unnecessary files</echo>
+		<echo>phing clear_cache     - delete unnecessary files</echo>
 		<echo/>
 
 		<echo>---------------------------------------------</echo>
@@ -242,15 +239,23 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 		Synchronize source code
 		==============================================
 	-->
-	<target name="clean" depends="">
+	<target name="clear_cache" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Clean up                  |</echo>
+		<echo>| Deep cache clearing           |</echo>
 		<echo>-----------------------------</echo>
 		<echo>Deleting temporary files...</echo>
 		<delete>
 			<fileset refid="typo3temp"/>
 			<fileset refid="typo3conf"/>
 		</delete>
+
+		<clearCache
+				database="${database.local.name}"
+				username="${database.local.username}"
+				password="${database.local.password}"
+				/>
+
+
 	</target>
 
 	<!--

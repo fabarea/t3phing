@@ -3,22 +3,22 @@
 /**
  * Base class
  */
- abstract class BaseTask extends Task{
+abstract class BaseTask extends Task {
 
 	/**
 	 * @var array
 	 */
 	protected $commands = array();
 
-	 /**
-	  * @var array
-	  */
-	 protected $configuration;
+	/**
+	 * @var array
+	 */
+	protected $configuration;
 
-	 /**
-	  * @var array
-	  */
-	 protected $properties;
+	/**
+	 * @var array
+	 */
+	protected $properties;
 
 	/**
 	 * @var boolean
@@ -42,6 +42,16 @@
 	}
 
 	/**
+	 * Tells whether the dry run flag is detected.
+	 *
+	 * @return bool
+	 */
+	public function isDryRun() {
+
+		return $this->properties['dryRun'] === 'true' || $this->properties['dryRun'] === TRUE;
+	}
+
+	/**
 	 * This method is used to generate the commands to be executed in the handler
 	 *
 	 * @return void
@@ -61,13 +71,11 @@
 
 		$result = array();
 		foreach ($commands as $command) {
-			if($this->dryRun) {
+			if ($this->dryRun) {
 				console($command);
-			}
-			elseif ($this->verbose) {
+			} elseif ($this->verbose) {
 				system($command, $result);
-			}
-			else {
+			} else {
 				exec($command, $result);
 			}
 		}
@@ -85,8 +93,7 @@
 			foreach ($message as $line) {
 				$this->project->log('     [' . $this->taskName . '] ' . trim($line));
 			}
-		}
-		else {
+		} else {
 			$this->project->log('     [' . $this->taskName . '] ' . trim($message));
 		}
 	}
@@ -99,14 +106,12 @@
 	 */
 	public function debug($message = '') {
 		$this->project->log('      []');
-		if(is_array($message) || is_object($message)) {
+		if (is_array($message) || is_object($message)) {
 			print_r($message);
-		}
-		elseif (is_bool($message)) {
+		} elseif (is_bool($message)) {
 			var_dump($message);
-		}
-		else {
-			print $message . chr (10);
+		} else {
+			print $message . chr(10);
 		}
 	}
 }
