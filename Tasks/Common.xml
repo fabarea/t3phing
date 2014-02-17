@@ -52,7 +52,7 @@
 		<echo>---------------------------------------------</echo>
 		<echo>phing initialize     - dump, localconf, htaccess, symlink, typo3temp, uploads, user_upload</echo>
 		<echo>phing initialize6    - dump6, htaccess, symlink, uploads, fileadmin</echo>
-		<!--<echo>phing push           - commit, use -Dmessage="my message"</echo>-->
+		<echo>phing reset          - dump6, clear_cache</echo>
 		<echo>phing test           - test the environment and the remote connection (not yet implemented)</echo>
 		<echo>phing help           - display this help message</echo>
 
@@ -70,7 +70,8 @@
 		<echo>---------------------------------------------</echo>
 		<echo>phing st             - phing status</echo>
 		<echo>phing df             - phing diff</echo>
-		<echo>phing c              - phing clear_cache</echo>
+		<echo>phing cc             - phing clear_cache</echo>
+		<echo>phing d              - phing dump6</echo>
 
 		<echo/>
 		<echo>---------------------------------------------</echo>
@@ -87,6 +88,7 @@
 	-->
 	<target name="initialize" depends="dump, localconf, htaccess, symlink, typo3temp, uploads, user_upload"/>
 	<target name="initialize6" depends="dump6, htaccess, symlink, uploads, fileadmin"/>
+	<target name="reset" depends="dump6, clear_cache"/>
 
 	<!--
 		==============================================
@@ -177,6 +179,7 @@
 	</target>
 
 
+	<target name="d" depends="dump6"/>
 	<target name="dump6" depends="">
 		<echo>-----------------------------</echo>
 		<echo>| Dump database |</echo>
@@ -253,7 +256,7 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 		Synchronize source code
 		==============================================
 	-->
-	<target name="c" depends="clear_cache" />
+	<target name="cc" depends="clear_cache" />
 	<target name="clear_cache" depends="">
 		<echo>-----------------------------</echo>
 		<echo>| Deep cache clearing |</echo>
