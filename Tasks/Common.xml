@@ -44,7 +44,8 @@
 		<echo>phing uploads         - fetch uploads folder</echo>
 		<echo>phing fileadmin       - fetch fileadmin</echo>
 		<echo>phing user_upload     - fetch user_upload folder</echo>
-		<echo>phing clear_cache     - flush temporary files along with database cache</echo>
+		<echo>phing clear_cache     - flush cached files along with database cache</echo>
+		<echo>phing warmup          - generate the home page</echo>
 		<echo/>
 
 		<echo>---------------------------------------------</echo>
@@ -52,7 +53,7 @@
 		<echo>---------------------------------------------</echo>
 		<echo>phing initialize     - dump, localconf, htaccess, symlink, typo3temp, uploads, user_upload</echo>
 		<echo>phing initialize6    - dump6, htaccess, symlink, uploads, fileadmin</echo>
-		<echo>phing reset          - dump6, clear_cache</echo>
+		<echo>phing reset          - dump6, clear_cache, warmup</echo>
 		<echo>phing test           - test the environment and the remote connection (not yet implemented)</echo>
 		<echo>phing help           - display this help message</echo>
 
@@ -70,7 +71,9 @@
 		<echo>---------------------------------------------</echo>
 		<echo>phing st             - phing status</echo>
 		<echo>phing df             - phing diff</echo>
-		<echo>phing cc             - phing clear_cache</echo>
+		<echo>phing c              - phing clear_cache</echo>
+		<echo>phing cc             - phing clear_cache (depth 2)</echo>
+		<echo>phing ccc            - phing clear_cache (depth 3)</echo>
 		<echo>phing d              - phing dump6</echo>
 
 		<echo/>
@@ -83,12 +86,12 @@
 
 	<!--
 		==============================================
-		entry point
+		Entry Point
 		==============================================
 	-->
 	<target name="initialize" depends="dump, localconf, htaccess, symlink, typo3temp, uploads, user_upload"/>
 	<target name="initialize6" depends="dump6, htaccess, symlink, uploads, fileadmin"/>
-	<target name="reset" depends="dump6, clear_cache"/>
+	<target name="reset" depends="dump6, clear_cache, warmup"/>
 
 	<!--
 		==============================================
@@ -114,6 +117,19 @@
 		<echo>| Remote status |</echo>
 		<echo>-----------------------------</echo>
 		<gitStatusRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
+	</target>
+
+	<!--
+		==============================================
+		System warmup
+		==============================================
+	-->
+	<target name="warmup" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Warmup website             |</echo>
+		<echo>-----------------------------</echo>
+		<commandLocal command="curl -s -A &quot;Mozilla/5.0&quot; http://${domain.local}/typo3/index.php > /dev/null"/>
+		<commandLocal command="curl -s -I http://${domain.local}/index.php > /dev/null"/>
 	</target>
 
 	<!--
@@ -253,24 +269,37 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 
 	<!--
 		==============================================
-		Synchronize source code
+		Clear cache
 		==============================================
 	-->
-	<target name="cc" depends="clear_cache" />
-	<target name="clear_cache" depends="">
+	<target name="c" depends="" >
 		<echo>-----------------------------</echo>
-		<echo>| Deep cache clearing |</echo>
+		<echo>| Deleting cached files     |</echo>
 		<echo>-----------------------------</echo>
-		<echo>Deleting temporary files...</echo>
+		<commandLocal command="rm -rf ${site.local.directory}typo3temp/Cache"/>
 		<delete>
-			<fileset refid="typo3temp"/>
 			<fileset refid="typo3conf"/>
 		</delete>
+	</target>
 
+	<target name="cc" depends="c">
+		<echo>---------------------------------</echo>
+		<echo>| Deleting cached files (deeper) |</echo>
+		<echo>---------------------------------</echo>
+		<delete>
+			<fileset refid="typo3temp"/>
+		</delete>
+	</target>
+
+	<target name="ccc" depends="c, cc">
+		<echo>-----------------------------</echo>
+		<echo>| Deleting database cache    |</echo>
+		<echo>-----------------------------</echo>
 		<clearCache database="${database.local.name}" username="${database.local.username}"
 		            password="${database.local.password}"/>
 
 	</target>
+	<target name="clear_cache" depends="c, cc, ccc" />
 
 	<!--
 		==============================================
