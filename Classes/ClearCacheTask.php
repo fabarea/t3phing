@@ -107,9 +107,10 @@ class ClearCacheTask extends BaseTask {
 			// get the result
 			exec($command, $result);
 
-			if (!empty($result[1])) {
+			if (!empty($result[1]) && $result[1] != 'NULL') {
 				$cacheTables = array_merge($cacheTables, explode(',', $result[1]));
 			}
+
 		}
 		return $cacheTables;
 	}
