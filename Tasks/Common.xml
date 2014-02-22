@@ -4,6 +4,9 @@
 	<property name="mysql.local" value="${command.local.mysql} -u ${database.local.username} -p${database.local.password}"/>
 
 	<!-- FILE SET -->
+	<fileset dir="${site.local.directory}fileadmin/_processed_" id="processedFiles">
+		<include name="**"/>
+	</fileset>
 	<fileset dir="${site.local.directory}typo3temp" id="typo3temp">
 		<include name="**"/>
 	</fileset>
@@ -273,9 +276,9 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 		==============================================
 	-->
 	<target name="c" depends="" >
-		<echo>-----------------------------</echo>
-		<echo>| Deleting cached files     |</echo>
-		<echo>-----------------------------</echo>
+		<echo>------------------------------</echo>
+		<echo>| Deleting cached depth 1     |</echo>
+		<echo>------------------------------</echo>
 		<commandLocal command="rm -rf ${site.local.directory}typo3temp/Cache"/>
 		<delete>
 			<fileset refid="typo3conf"/>
@@ -283,20 +286,24 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 	</target>
 
 	<target name="cc" depends="c">
-		<echo>---------------------------------</echo>
-		<echo>| Deleting cached files (deeper) |</echo>
-		<echo>---------------------------------</echo>
+		<echo>------------------------------</echo>
+		<echo>| Deleting cached depth 2     |</echo>
+		<echo>------------------------------</echo>
 		<delete>
 			<fileset refid="typo3temp"/>
 		</delete>
 	</target>
 
 	<target name="ccc" depends="c, cc">
-		<echo>-----------------------------</echo>
-		<echo>| Deleting database cache    |</echo>
-		<echo>-----------------------------</echo>
+		<echo>------------------------------</echo>
+		<echo>| Deleting cached depth 3     |</echo>
+		<echo>------------------------------</echo>
 		<clearCache database="${database.local.name}" username="${database.local.username}"
 		            password="${database.local.password}"/>
+
+		<delete>
+			<fileset refid="processedFiles"/>
+		</delete>
 
 	</target>
 	<target name="clear_cache" depends="c, cc, ccc" />
