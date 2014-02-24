@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<project name="AssetCompiler" basedir="Tasks" default="">
+
+	<property name="resource.directory" value="htdocs/typo3conf/ext/speciality/Resources/Public"/>
+	<property name="bootstrap.component.directory" value="${resource.directory}/Components/sass-bootstrap"/>
+
+	<!-- ============================================  -->
+	<!-- Target: update                                -->
+	<!-- ============================================  -->
+	<target name="update" depends="bower, prepare-files, css"></target>
+
+	<!-- ============================================  -->
+	<!-- Target: prepare-files                          -->
+	<!-- ============================================  -->
+	<target name="prepare-files">
+		<echo>----------------------------------------------</echo>
+		<echo>| Prepare File Structure                      |</echo>
+		<echo>----------------------------------------------</echo>
+		<mkdir dir="${resource.directory}/Fonts"/>
+
+		<copy todir="${resource.directory}/Fonts">
+
+			<!-- FILE SET -->
+			<fileset dir="${bootstrap.component.directory}/fonts">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- ============================================  -->
+	<!-- Target: bower                                 -->
+	<!-- ============================================  -->
+	<target name="bower">
+		<echo>----------------------------------------------</echo>
+		<echo>| Bower will install necessary Web Components |</echo>
+		<echo>----------------------------------------------</echo>
+		<exec command="cd htdocs/typo3conf/ext/speciality; bower install" checkreturn="true" logoutput="/dev/stdout"/>
+	</target>
+
+	<!-- ============================================  -->
+	<!-- Target: css                                   -->
+	<!-- ============================================  -->
+	<target name="css">
+		<echo>-----------------------------</echo>
+		<echo>| Compiling CSS |</echo>
+		<echo>-----------------------------</echo>
+		<exec command="cd htdocs/typo3conf/ext/speciality; compass compile -s compressed --force" checkreturn="true" logoutput="/dev/stdout"/>
+	</target>
+
+	<!-- ============================================  -->
+	<!-- Target: watch                                   -->
+	<!-- ============================================  -->
+	<target name="watch">
+		<echo>------------------------------</echo>
+		<echo>| Compiling CSS as they change|</echo>
+		<echo>------------------------------</echo>
+		<exec command="cd htdocs/typo3conf/ext/speciality; compass watch -s compressed" checkreturn="true" logoutput="/dev/stdout"/>
+	</target>
+
+	<!-- ============================================  -->
+	<!-- Target: check                                 -->
+	<!-- ============================================  -->
+	<target name="check">
+		<echo>-----------------------------</echo>
+		<echo>| Checking environment       |</echo>
+		<echo>-----------------------------</echo>
+
+		<!-- Check Compass  -->
+		<exec command="which compass" outputProperty="compass.path"/>
+		<if>
+			<istrue value="${compass.path}"/>
+			<then>
+				<echo>[OK] Compass was found at ${compass.path}</echo>
+				<exec command="compass --version | awk 'NR==1{print $2}'" outputProperty="compass.version"/>
+				<echo>     Current version: ${compass.version}</echo>
+			</then>
+			<else>
+				<echo>[ERROR] Compass was not found on your system. It could be installed with command: "gem install --no-rdoc --no-ri sass compass"</echo>
+			</else>
+		</if>
+		<echo> </echo>
+
+		<!-- Check Bower  -->
+		<exec command="which bower" outputProperty="bower.path"/>
+		<if>
+			<istrue value="${bower.path}"/>
+			<then>
+				<echo>[OK] Bower was found at ${bower.path}</echo>
+				<exec command="bower --version" outputProperty="bower.version"/>
+				<echo>     Current version: ${bower.version}</echo>
+			</then>
+			<else>
+				<echo>[ERROR] Bower was not found on your system. It could be installed with command: "sudo npm install -g bower"</echo>
+			</else>
+		</if>
+	</target>
+
+</project>

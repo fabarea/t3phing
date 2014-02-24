@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<project name="RemoteCommander" basedir="Tasks" default="" >
+
+	<!--
+		==============================================
+		Git Diff Remote
+		==============================================
+	-->
+	<target name="df" depends="diff"/>
+	<target name="diff" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Remote diff |</echo>
+		<echo>-----------------------------</echo>
+		<gitDiffRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
+	</target>
+
+	<!--
+		==============================================
+		Git Remote Status
+		==============================================
+	-->
+	<target name="st" depends="status"/>
+	<target name="status" depends="">
+		<echo>-----------------------------</echo>
+		<echo>| Remote status |</echo>
+		<echo>-----------------------------</echo>
+		<gitStatusRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
+	</target>
+
+
+</project>

@@ -1,19 +1,20 @@
 <?xml version="1.0"?>
-<project name="main" basedir="." default="help"  description="Fetches the data from a remote website">
+<project name="main" basedir="Examples" default="" description="Fetches the data from a remote website">
 
 	<!--
-		MANUAL STEPS
-		- git clone HOST LOCALNAME
-		- git submodule init
-		- create entry in /etc/hosts
-		- create new virtual host
-		- create new database
+
+	Assuming these tasks are done:
+	==============================
+	- create entry in /etc/hosts or DNS
+	- create new virtual host
+	- create new database
+
 	-->
 
-	<!-- FLAGS -->
+	<!-- Flags -->
 	<property name="dryRun" value="${dryRun}"/>
 
-	<!-- REMOTE PROPERTY -->
+	<!-- Properties for remote -->
 	<property name="domain.remote" value="REPLACE_DOMAIN_REMOTE"/>
 	<property name="site.remote.directory" value="/sites/REPLACE_DOMAIN_REMOTE/htdocs/"/>
 	<property name="site.remote.directory.temp" value="/tmp/"/>
@@ -22,7 +23,7 @@
 	<property name="database.remote.username" value="REPLACE_DATABASE_REMOTE"/>
 	<property name="database.remote.password" value="REPLACE_DATABASE_PASSWORD_REMOTE"/>
 
-	<!-- LOCAL PROPERTY -->
+	<!-- Properties for local -->
 	<property name="domain.local" value="REPLACE_DOMAIN_LOCAL"/>
 	<property name="site.local.directory" value="PATH_LOCAL/REPLACE_DOMAIN_LOCAL/htdocs/"/>
 	<property name="path.core" value="/t3core/typo3_src-4.5.git"/>
@@ -31,9 +32,7 @@
 	<property name="database.local.password" value="root"/>
 	<property name="database.local.host" value="127.0.0.1"/>
 
-	<!-- RUNNING VARIABLES -->
+	<!-- Environment variables -->
 	<property name="command.local.mysql" value="REPLACE_COMMAND"/>
-	<property name="t3phing.home" value="REPLACE_HOME/"/>
-
-	<import file="${t3phing.home}/Tasks/Common.xml"/>
+	<property name="t3phing.home" value="build/Phing/"/> <!-- can be an absolute path -->
 </project>

@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<project name="Master" basedir="Tasks" default="">
+
+	<import file="${t3phing.home}AssetCompiler.xml"/>
+	<import file="${t3phing.home}CacheHandler.xml"/>
+	<import file="${t3phing.home}SiteImporter.xml"/>
+	<import file="${t3phing.home}RemoteCommander.xml"/>
+
+	<property name="mysql.local" value="${command.local.mysql} -u ${database.local.username} -p${database.local.password}"/>
+
+	<!-- FILE SET -->
+	<fileset dir="${site.local.directory}fileadmin/_processed_" id="processedFiles">
+		<include name="**"/>
+	</fileset>
+	<fileset dir="${site.local.directory}typo3temp" id="typo3temp">
+		<include name="**"/>
+	</fileset>
+	<fileset dir="${site.local.directory}typo3conf" id="typo3conf">
+		<include name="*.log"/>
+	</fileset>
+	<path id="t3phing.classes">
+		<pathelement dir="${t3phing.home}Classes/"/>
+	</path>
+
+
+	<!-- TASK DEFINITION -->
+	<taskdef name="rsync" classname="Rsync" classpathref="t3phing.classes"/>
+	<taskdef name="localconfFinisher" classname="LocalconfFinisher" classpathref="t3phing.classes"/>
+	<taskdef name="dumpRemote" classname="DumpRemote" classpathref="t3phing.classes"/>
+	<taskdef name="commandRemote" classname="CommandRemote" classpathref="t3phing.classes"/>
+	<taskdef name="commandLocal" classname="CommandLocal" classpathref="t3phing.classes"/>
+	<taskdef name="gitStatusRemote" classname="GitStatusRemote" classpathref="t3phing.classes"/>
+	<taskdef name="gitDiffRemote" classname="GitDiffRemote" classpathref="t3phing.classes"/>
+	<taskdef name="clearCache" classname="ClearCacheTask" classpathref="t3phing.classes"/>
+
+	<!--
+		==============================================
+		Default entry point
+		==============================================
+	-->
+	<target name="help">
+		<echo>Usage of this Phing:</echo>
+		<echo />
+		<echo>---------------------------------------------</echo>
+		<echo>Compile StyleSheets / JavaScript</echo>
+		<echo>---------------------------------------------</echo>
+		<echo>phing css             - Compile Sass stylesheets to CSS</echo>
+		<echo>phing watch           - Compile Sass stylesheets to CSS when they change. Recommended to use command "compass watch" instead of this phing</echo>
+		<echo>phing update          - Update all Web Components and re-compile CSS</echo>
+		<echo>phing check           - Check all dependencies are met and the phing tasks will work.</echo>
+		<echo/>
+
+
+		<echo>---------------------------------------------</echo>
+		<echo>Import website locally</echo>
+		<echo>---------------------------------------------</echo>
+		<echo>phing clear_cache     - flush cached files along with database cache (depth 3)</echo>
+		<echo>phing warmup          - Call Frontend to generate necessary files</echo>
+		<echo>phing c               - phing clear_cache</echo>
+		<echo>phing cc              - phing clear_cache (depth 2)</echo>
+		<echo>phing ccc             - phing clear_cache (depth 3)</echo>
+		<echo/>
+
+		<echo>---------------------------------------------</echo>
+		<echo>Import website locally</echo>
+		<echo>---------------------------------------------</echo>
+		<echo>phing dump6           - fetch the database and build it again locally for TYPO3 6.0</echo>
+		<echo>phing dump            - fetch the database and build it again locally</echo>
+		<echo>phing localconf       - fetch localconf.php and add custom values - OBSOLETE WITH TYPO3 6.0</echo>
+		<echo>phing htaccess        - fetch the htaccess from the remote server</echo>
+		<echo>phing symlink         - create symlinks to the core - ${path.core}</echo>
+		<echo>phing typo3temp       - create typo3temp directory</echo>
+		<echo>phing uploads         - fetch uploads folder</echo>
+		<echo>phing fileadmin       - fetch fileadmin</echo>
+		<echo>phing user_upload     - fetch user_upload folder</echo>
+		<echo>phing d               - phing dump6</echo>
+
+		<echo>---------------------------------------------</echo>
+		<echo>Convenience tasks</echo>
+		<echo>---------------------------------------------</echo>
+		<echo>phing initialize     - dump, localconf, htaccess, symlink, typo3temp, uploads, user_upload</echo>
+		<echo>phing initialize6    - dump6, htaccess, symlink, uploads, fileadmin</echo>
+		<echo>phing reset          - dump6, clear_cache, warmup</echo>
+		<echo>phing test           - test the environment and the remote connection (not yet implemented)</echo>
+		<echo>phing help           - display this help message</echo>
+
+
+		<echo/>
+		<echo>---------------------------------------------</echo>
+		<echo>Query remote host</echo>
+		<echo>---------------------------------------------</echo>
+		<echo>phing status             - git remote status</echo>
+		<echo>phing diff               - git remote diff</echo>
+		<echo>phing st                 - Shortcut of "phing status"</echo>
+		<echo>phing df                 - Shortcut of "phing diff"</echo>
+
+		<echo/>
+		<echo>---------------------------------------------</echo>
+		<echo>Possible option</echo>
+		<echo>---------------------------------------------</echo>
+		<echo>-DdryRun=true        - will display the command to be executed</echo>
+	</target>
+
+
+</project>

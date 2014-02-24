@@ -1,90 +1,5 @@
 <?xml version="1.0"?>
-<project name="imported task" basedir="." default="" description="">
-
-	<property name="mysql.local" value="${command.local.mysql} -u ${database.local.username} -p${database.local.password}"/>
-
-	<!-- FILE SET -->
-	<fileset dir="${site.local.directory}fileadmin/_processed_" id="processedFiles">
-		<include name="**"/>
-	</fileset>
-	<fileset dir="${site.local.directory}typo3temp" id="typo3temp">
-		<include name="**"/>
-	</fileset>
-	<fileset dir="${site.local.directory}typo3conf" id="typo3conf">
-		<include name="*.log"/>
-	</fileset>
-	<path id="t3phing.classes">
-		<pathelement dir="${t3phing.home}Classes/"/>
-	</path>
-
-
-	<!-- TASK DEFINITION -->
-	<!--<taskdef name="checkRemote" classname="CheckRemote" classpathref="t3phing.classes"/>-->
-	<taskdef name="rsync" classname="Rsync" classpathref="t3phing.classes"/>
-	<!--<taskdef name="checkLocal" classname="CheckLocal" classpathref="t3phing.classes"/>-->
-	<taskdef name="localconfFinisher" classname="LocalconfFinisher" classpathref="t3phing.classes"/>
-	<taskdef name="dumpRemote" classname="DumpRemote" classpathref="t3phing.classes"/>
-	<taskdef name="commandRemote" classname="CommandRemote" classpathref="t3phing.classes"/>
-	<taskdef name="commandLocal" classname="CommandLocal" classpathref="t3phing.classes"/>
-	<taskdef name="gitStatusRemote" classname="GitStatusRemote" classpathref="t3phing.classes"/>
-	<taskdef name="gitDiffRemote" classname="GitDiffRemote" classpathref="t3phing.classes"/>
-	<taskdef name="clearCache" classname="ClearCacheTask" classpathref="t3phing.classes"/>
-
-	<!--
-		==============================================
-		Default entry point
-		==============================================
-	-->
-	<target name="help">
-		<echo>Usage of this Phing:</echo>
-		<echo/>
-		<echo>phing dump6           - fetch the database and build it again locally for TYPO3 6.0</echo>
-		<echo>phing dump            - fetch the database and build it again locally</echo>
-		<echo>phing localconf       - fetch localconf.php and add custom values - OBSOLETE WITH TYPO3 6.0</echo>
-		<echo>phing htaccess        - fetch the htaccess from the remote server</echo>
-		<echo>phing symlink         - create symlinks to the core - ${path.core}</echo>
-		<echo>phing typo3temp       - create typo3temp directory</echo>
-		<echo>phing uploads         - fetch uploads folder</echo>
-		<echo>phing fileadmin       - fetch fileadmin</echo>
-		<echo>phing user_upload     - fetch user_upload folder</echo>
-		<echo>phing clear_cache     - flush cached files along with database cache</echo>
-		<echo>phing warmup          - generate the home page</echo>
-		<echo/>
-
-		<echo>---------------------------------------------</echo>
-		<echo>Convenience tasks</echo>
-		<echo>---------------------------------------------</echo>
-		<echo>phing initialize     - dump, localconf, htaccess, symlink, typo3temp, uploads, user_upload</echo>
-		<echo>phing initialize6    - dump6, htaccess, symlink, uploads, fileadmin</echo>
-		<echo>phing reset          - dump6, clear_cache, warmup</echo>
-		<echo>phing test           - test the environment and the remote connection (not yet implemented)</echo>
-		<echo>phing help           - display this help message</echo>
-
-
-		<echo/>
-		<echo>---------------------------------------------</echo>
-		<echo>Tasks executed on remote host</echo>
-		<echo>---------------------------------------------</echo>
-		<echo>phing status             - git remote status</echo>
-		<echo>phing diff               - git remote diff</echo>
-
-		<echo/>
-		<echo>---------------------------------------------</echo>
-		<echo>Shortcut syntax</echo>
-		<echo>---------------------------------------------</echo>
-		<echo>phing st             - phing status</echo>
-		<echo>phing df             - phing diff</echo>
-		<echo>phing c              - phing clear_cache</echo>
-		<echo>phing cc             - phing clear_cache (depth 2)</echo>
-		<echo>phing ccc            - phing clear_cache (depth 3)</echo>
-		<echo>phing d              - phing dump6</echo>
-
-		<echo/>
-		<echo>---------------------------------------------</echo>
-		<echo>Possible option</echo>
-		<echo>---------------------------------------------</echo>
-		<echo>-DdryRun=true        - will display the command to be executed</echo>
-	</target>
+<project name="SiteImporter" basedir="Tasks" default="">
 
 
 	<!--
@@ -95,45 +10,6 @@
 	<target name="initialize" depends="dump, localconf, htaccess, symlink, typo3temp, uploads, user_upload"/>
 	<target name="initialize6" depends="dump6, htaccess, symlink, uploads, fileadmin"/>
 	<target name="reset" depends="dump6, clear_cache, warmup"/>
-
-	<!--
-		==============================================
-		Git Diff Remote
-		==============================================
-	-->
-	<target name="df" depends="diff"/>
-	<target name="diff" depends="">
-		<echo>-----------------------------</echo>
-		<echo>| Remote diff |</echo>
-		<echo>-----------------------------</echo>
-		<gitDiffRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
-	</target>
-
-	<!--
-		==============================================
-		Git Remote Status
-		==============================================
-	-->
-	<target name="st" depends="status"/>
-	<target name="status" depends="">
-		<echo>-----------------------------</echo>
-		<echo>| Remote status |</echo>
-		<echo>-----------------------------</echo>
-		<gitStatusRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
-	</target>
-
-	<!--
-		==============================================
-		System warmup
-		==============================================
-	-->
-	<target name="warmup" depends="">
-		<echo>-----------------------------</echo>
-		<echo>| Warmup website             |</echo>
-		<echo>-----------------------------</echo>
-		<commandLocal command="curl -s -A &quot;Mozilla/5.0&quot; http://${domain.local}/typo3/index.php > /dev/null"/>
-		<commandLocal command="curl -s -I http://${domain.local}/index.php > /dev/null"/>
-	</target>
 
 	<!--
 		==============================================
@@ -270,43 +146,6 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 
 	</target>
 
-	<!--
-		==============================================
-		Clear cache
-		==============================================
-	-->
-	<target name="c" depends="" >
-		<echo>------------------------------</echo>
-		<echo>| Deleting cached depth 1     |</echo>
-		<echo>------------------------------</echo>
-		<commandLocal command="rm -rf ${site.local.directory}typo3temp/Cache"/>
-		<delete>
-			<fileset refid="typo3conf"/>
-		</delete>
-	</target>
-
-	<target name="cc" depends="c">
-		<echo>------------------------------</echo>
-		<echo>| Deleting cached depth 2     |</echo>
-		<echo>------------------------------</echo>
-		<delete>
-			<fileset refid="typo3temp"/>
-		</delete>
-	</target>
-
-	<target name="ccc" depends="c, cc">
-		<echo>------------------------------</echo>
-		<echo>| Deleting cached depth 3     |</echo>
-		<echo>------------------------------</echo>
-		<clearCache database="${database.local.name}" username="${database.local.username}"
-		            password="${database.local.password}"/>
-
-		<delete>
-			<fileset refid="processedFiles"/>
-		</delete>
-
-	</target>
-	<target name="clear_cache" depends="c, cc, ccc" />
 
 	<!--
 		==============================================
@@ -387,17 +226,4 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 		<echo>Creating typo3temp...</echo>
 		<mkdir dir="${site.local.directory}typo3temp"/>
 	</target>
-
-	<!--
-		==============================================
-		Test the environment
-		==============================================
-	-->
-	<target name="test" depends="">
-		<echo>-----------------------------</echo>
-		<echo>| Test environment |</echo>
-		<echo>-----------------------------</echo>
-		<echo>Not yet implemented</echo>
-	</target>
-
 </project>
