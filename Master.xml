@@ -41,6 +41,9 @@
 	<target name="help">
 		<echo>Usage of this Phing:</echo>
 		<echo />
+
+		<echo>phing help            - display this help message</echo>
+		<echo />
 		<echo>---------------------------------------------</echo>
 		<echo>Compile StyleSheets / JavaScript</echo>
 		<echo>---------------------------------------------</echo>
@@ -52,45 +55,41 @@
 
 
 		<echo>---------------------------------------------</echo>
-		<echo>Import website locally</echo>
+		<echo>Handle cache</echo>
 		<echo>---------------------------------------------</echo>
-		<echo>phing clear_cache     - flush cached files along with database cache (depth 3)</echo>
+		<echo>phing clear_cache     - Flush cached files along with database cache (depth 3)</echo>
 		<echo>phing warmup          - Call Frontend to generate necessary files</echo>
-		<echo>phing c               - phing clear_cache</echo>
-		<echo>phing cc              - phing clear_cache (depth 2)</echo>
-		<echo>phing ccc             - phing clear_cache (depth 3)</echo>
+		<echo/>
+		<echo>phing c               - Clear cache, depth 1: typo3temp/Cache files</echo>
+		<echo>phing cc              - Clear cache, depth 2: all typo3temp files</echo>
+		<echo>phing ccc             - Clear cache, depth 3: all typo3temp files + database</echo>
 		<echo/>
 
 		<echo>---------------------------------------------</echo>
 		<echo>Import website locally</echo>
 		<echo>---------------------------------------------</echo>
-		<echo>phing dump6           - fetch the database and build it again locally for TYPO3 6.0</echo>
-		<echo>phing dump            - fetch the database and build it again locally</echo>
-		<echo>phing localconf       - fetch localconf.php and add custom values - OBSOLETE WITH TYPO3 6.0</echo>
-		<echo>phing htaccess        - fetch the htaccess from the remote server</echo>
-		<echo>phing symlink         - create symlinks to the core - ${path.core}</echo>
-		<echo>phing typo3temp       - create typo3temp directory</echo>
-		<echo>phing uploads         - fetch uploads folder</echo>
-		<echo>phing fileadmin       - fetch fileadmin</echo>
-		<echo>phing user_upload     - fetch user_upload folder</echo>
+		<echo>phing dump6           - Fetch the database and build it again locally for TYPO3 6.0</echo>
+		<echo>phing dump            - Fetch the database and build it again locally</echo>
+		<echo>phing localconf       - Fetch localconf.php and add custom values - OBSOLETE WITH TYPO3 6.0</echo>
+		<echo>phing htaccess        - Fetch the htaccess from the remote server</echo>
+		<echo>phing symlink         - Create symlinks to the core - ${path.core}</echo>
+		<echo>phing typo3temp       - Create typo3temp directory</echo>
+		<echo>phing uploads         - Fetch uploads folder</echo>
+		<echo>phing fileadmin       - Fetch fileadmin</echo>
+		<echo>phing user_upload     - Fetch user_upload folder</echo>
+		<echo/>
 		<echo>phing d               - phing dump6</echo>
-
-		<echo>---------------------------------------------</echo>
-		<echo>Convenience tasks</echo>
-		<echo>---------------------------------------------</echo>
-		<echo>phing initialize     - dump, localconf, htaccess, symlink, typo3temp, uploads, user_upload</echo>
-		<echo>phing initialize6    - dump6, htaccess, symlink, uploads, fileadmin</echo>
-		<echo>phing reset          - dump6, clear_cache, warmup</echo>
-		<echo>phing test           - test the environment and the remote connection (not yet implemented)</echo>
-		<echo>phing help           - display this help message</echo>
-
+		<echo>phing initialize      - dump, localconf, htaccess, symlink, typo3temp, uploads, user_upload</echo>
+		<echo>phing initialize6     - dump6, htaccess, symlink, uploads, fileadmin</echo>
+		<echo>phing reset           - dump6, clear_cache, warmup</echo>
 
 		<echo/>
 		<echo>---------------------------------------------</echo>
-		<echo>Query remote host</echo>
+		<echo>Commands on remote host</echo>
 		<echo>---------------------------------------------</echo>
 		<echo>phing status             - git remote status</echo>
 		<echo>phing diff               - git remote diff</echo>
+		<echo/>
 		<echo>phing st                 - Shortcut of "phing status"</echo>
 		<echo>phing df                 - Shortcut of "phing diff"</echo>
 
