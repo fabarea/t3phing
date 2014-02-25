@@ -53,7 +53,6 @@
 		<echo>phing check           - Check all dependencies are met and the phing tasks will work.</echo>
 		<echo/>
 
-
 		<echo>---------------------------------------------</echo>
 		<echo>Handle cache</echo>
 		<echo>---------------------------------------------</echo>
@@ -85,7 +84,7 @@
 
 		<echo/>
 		<echo>---------------------------------------------</echo>
-		<echo>Commands on remote host</echo>
+		<echo>Commands on remote</echo>
 		<echo>---------------------------------------------</echo>
 		<echo>phing status             - git remote status</echo>
 		<echo>phing diff               - git remote diff</echo>
@@ -99,6 +98,5 @@
 		<echo>---------------------------------------------</echo>
 		<echo>-DdryRun=true        - will display the command to be executed</echo>
 	</target>
-
 
 </project>
