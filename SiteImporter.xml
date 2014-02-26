@@ -30,9 +30,7 @@
 				username="${database.remote.username}"
 				password="${database.remote.password}"
 				additionalIgnoreTables="tx_realurl_chashcache, tx_realurl_errorlog, tx_realurl_pathcache,
-									tx_realurl_redirects, tx_realurl_uniqalias , tx_realurl_urldecodecache, tx_realurl_urlencodecache,
-									cache_extensions
-									"
+									tx_realurl_redirects, tx_realurl_uniqalias , tx_realurl_urldecodecache, tx_realurl_urlencodecache, cache_extensions"
 				/>
 
 		<echo>Fetching dump...</echo>
