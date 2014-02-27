@@ -51,8 +51,10 @@
 		<echo>---------------------------------------------</echo>
 		<echo>phing css             - Compile Sass stylesheets to CSS</echo>
 		<echo>phing watch           - Compile Sass stylesheets to CSS when they change. Recommended to use command "compass watch" instead of this phing</echo>
-		<echo>phing update          - Update all Web Components and re-compile CSS</echo>
-		<echo>phing check           - Check all dependencies are met and the phing tasks will work.</echo>
+		<echo>phing bower-install   - Install all Web Components configured in EXT:speciality/bower.json</echo>
+		<echo>phing bower-update    - Update all Web Components configured in EXT:speciality/bower.json</echo>
+		<echo>phing bower-status    - Check whether Web Components must be updated</echo>
+		<echo>phing check           - Check all dependencies are correctly met. This will ensure Phing to work.</echo>
 		<echo/>
 
 		<echo>---------------------------------------------</echo>
