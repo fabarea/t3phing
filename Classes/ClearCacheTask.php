@@ -49,7 +49,8 @@ class ClearCacheTask extends BaseTask {
 
 		$commands = array();
 		foreach ($this->getCacheTables() as $cacheTable) {
-			$commands[] = sprintf('mysql -u root -p%s -e "TRUNCATE table %s;" %s',
+			$commands[] = sprintf('mysql -u %s -p%s -e "TRUNCATE table %s;" %s',
+				$this->username,
 				$this->password,
 				$cacheTable,
 				$this->database
@@ -100,7 +101,8 @@ class ClearCacheTask extends BaseTask {
 				$this->database,
 				$prefix
 			);
-			$command = sprintf('mysql -u root -p%s -e "%s"',
+			$command = sprintf('mysql -u %s -p%s -e "%s"',
+				$this->username,
 				$this->password,
 				$request
 			);

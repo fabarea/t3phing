@@ -9,8 +9,10 @@
 	<property name="mysql.local" value="${command.local.mysql} -u ${database.local.username} -p${database.local.password}"/>
 
 	<!-- FILE SET -->
-	<fileset dir="${site.local.directory}fileadmin/_processed_" id="processedFiles">
-		<include name="**"/>
+	<fileset dir="${site.local.directory}fileadmin" id="processedFiles">
+		<include name="_processed_/**"/>
+		<include name="*/_processed_/**"/>
+		<include name="*/*/_processed_/**"/>
 	</fileset>
 	<fileset dir="${site.local.directory}typo3temp" id="typo3temp">
 		<include name="**"/>
