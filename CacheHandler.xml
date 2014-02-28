@@ -30,7 +30,7 @@
 		<echo>| Deleting cached depth 3     |</echo>
 		<echo>------------------------------</echo>
 		<clearCache database="${database.local.name}" username="${database.local.username}"
-		            password="${database.local.password}"/>
+		            password="${database.local.password}" mysqlPath="${command.local.mysql}"/>
 
 		<delete>
 			<fileset refid="processedFiles"/>

@@ -38,6 +38,11 @@ class ClearCacheTask extends BaseTask {
 	protected $host;
 
 	/**
+	 * @var string
+	 */
+	protected $mysqlPath;
+
+	/**
 	 * Main entry point.
 	 *
 	 * @return void
@@ -49,7 +54,8 @@ class ClearCacheTask extends BaseTask {
 
 		$commands = array();
 		foreach ($this->getCacheTables() as $cacheTable) {
-			$commands[] = sprintf('mysql -u %s -p%s -e "TRUNCATE table %s;" %s',
+			$commands[] = sprintf('%s -u %s -p%s -e "TRUNCATE table %s;" %s',
+				$this->mysqlPath,
 				$this->username,
 				$this->password,
 				$cacheTable,
@@ -101,7 +107,8 @@ class ClearCacheTask extends BaseTask {
 				$this->database,
 				$prefix
 			);
-			$command = sprintf('mysql -u %s -p%s -e "%s"',
+			$command = sprintf('%s -u %s -p%s -e "%s"',
+				$this->mysqlPath,
 				$this->username,
 				$this->password,
 				$request
@@ -122,8 +129,6 @@ class ClearCacheTask extends BaseTask {
 	// -------------------------------
 
 	/**
-	 * Set the database
-	 *
 	 * @param string $value
 	 * @return void
 	 */
@@ -132,8 +137,6 @@ class ClearCacheTask extends BaseTask {
 	}
 
 	/**
-	 * Set the username
-	 *
 	 * @param string $value
 	 * @return void
 	 */
@@ -142,8 +145,6 @@ class ClearCacheTask extends BaseTask {
 	}
 
 	/**
-	 * Set the password
-	 *
 	 * @param string $value
 	 * @return void
 	 */
@@ -152,13 +153,19 @@ class ClearCacheTask extends BaseTask {
 	}
 
 	/**
-	 * Set the password
-	 *
 	 * @param string $value
 	 * @return void
 	 */
 	public function setHost($value) {
 		$this->host = $value;
+	}
+
+	/**
+	 * @param string $value
+	 * @return void
+	 */
+	public function setMysqlPath($value) {
+		$this->mysqlPath = $value;
 	}
 
 }
