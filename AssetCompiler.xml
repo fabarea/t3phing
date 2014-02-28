@@ -2,51 +2,41 @@
 <project name="AssetCompiler" basedir="Tasks" default="">
 
 	<property name="resource.directory" value="htdocs/typo3conf/ext/speciality/Resources/Public"/>
-	<property name="bootstrap.component.directory" value="${resource.directory}/Components/twbs-bootstrap-sass"/>
-	<property name="bootstrap.component.fonts" value="${bootstrap.component.directory}/vendor/assets/fonts/bootstrap"/>
+	<property name="component.directory" value="${resource.directory}/Components"/>
+	<property name="component.bootstrap.fonts" value="${component.directory}/twbs-bootstrap-sass/vendor/assets/fonts/bootstrap"/>
+	<property name="component.bootstrap.javascript" value="${component.directory}/twbs-bootstrap-sass/vendor/assets/javascripts"/>
+	<property name="component.jquery" value="${component.directory}/jquery/"/>
 
 	<!-- ============================================  -->
-	<!-- Target: prepare-files                          -->
+	<!-- Target: bootstrap-environment                          -->
 	<!-- ============================================  -->
-	<target name="prepare-files">
+	<target name="bootstrap-environment">
 		<echo>----------------------------------------------</echo>
 		<echo>| Prepare File Structure                      |</echo>
 		<echo>----------------------------------------------</echo>
 		<mkdir dir="${resource.directory}/Fonts"/>
-
+		<mkdir dir="${resource.directory}/StyleSheets/Sass"/>
+		<mkdir dir="${resource.directory}/Images"/>
+		<mkdir dir="${resource.directory}/JavaScript"/>
 	</target>
 
 	<!-- ============================================  -->
 	<!-- Target: bower                                 -->
 	<!-- ============================================  -->
-	<target name="bower-install" depends="prepare-files">
+	<target name="bower-install" depends="bootstrap-environment">
 		<echo>----------------------------------------------</echo>
 		<echo>| Installing Web Components                  |</echo>
 		<echo>----------------------------------------------</echo>
 		<exec command="cd htdocs/typo3conf/ext/speciality; bower install" checkreturn="true" logoutput="/dev/stdout"/>
 
-		<copy todir="${resource.directory}/Fonts">
-
-			<!-- FILE SET -->
-			<fileset dir="${bootstrap.component.fonts}">
-				<include name="**"/>
-			</fileset>
-		</copy>
 	</target>
 
-	<target name="bower-update" depends="prepare-files">
+	<target name="bower-update" depends="bootstrap-environment">
 		<echo>----------------------------------------------</echo>
 		<echo>| Updating Web Components                     |</echo>
 		<echo>----------------------------------------------</echo>
 		<exec command="cd htdocs/typo3conf/ext/speciality; bower update" checkreturn="true" logoutput="/dev/stdout"/>
 
-		<copy todir="${resource.directory}/Fonts">
-
-			<!-- FILE SET -->
-			<fileset dir="${bootstrap.component.fonts}">
-				<include name="**"/>
-			</fileset>
-		</copy>
 	</target>
 
 	<target name="bower-status">
@@ -59,9 +49,9 @@
 	<!-- ============================================  -->
 	<!-- Target: css                                   -->
 	<!-- ============================================  -->
-	<target name="css">
+	<target name="css-compile" depends="bootstrap-environment">
 		<echo>-----------------------------</echo>
-		<echo>| Compiling CSS |</echo>
+		<echo>| Compiling CSS              |</echo>
 		<echo>-----------------------------</echo>
 		<exec command="cd htdocs/typo3conf/ext/speciality; compass compile -s compressed --force" checkreturn="true" logoutput="/dev/stdout"/>
 	</target>
@@ -69,35 +59,23 @@
 	<!-- ============================================  -->
 	<!-- Target: watch                                   -->
 	<!-- ============================================  -->
-	<target name="watch">
+	<target name="css-watch" depends="bootstrap-environment">
 		<echo>------------------------------</echo>
-		<echo>| Compiling CSS as they change|</echo>
+		<echo>| Watching and compiling CSS  |</echo>
 		<echo>------------------------------</echo>
+		<echo>Tip: alternatively use this command to have more output on the console as stylesheets are compiling.</echo>
+		<echo>$> cd htdocs/typo3conf/ext/speciality; compass watch -s compressed</echo>
+
 		<exec command="cd htdocs/typo3conf/ext/speciality; compass watch -s compressed" checkreturn="true" logoutput="/dev/stdout"/>
 	</target>
 
 	<!-- ============================================  -->
 	<!-- Target: check                                 -->
 	<!-- ============================================  -->
-	<target name="check">
+	<target name="check-system">
 		<echo>-----------------------------</echo>
 		<echo>| Checking environment       |</echo>
 		<echo>-----------------------------</echo>
-
-		<!-- Check Compass  -->
-		<exec command="which compass" outputProperty="compass.path"/>
-		<if>
-			<istrue value="${compass.path}"/>
-			<then>
-				<echo>[OK] Compass was found at ${compass.path}</echo>
-				<exec command="compass --version | awk 'NR==1{print $2}'" outputProperty="compass.version"/>
-				<echo>     Current version: ${compass.version}</echo>
-			</then>
-			<else>
-				<echo>[ERROR] Compass was not found on your system. It could be installed with command: "gem install --no-rdoc --no-ri sass compass"</echo>
-			</else>
-		</if>
-		<echo> </echo>
 
 		<!-- Check Bower  -->
 		<exec command="which bower" outputProperty="bower.path"/>
@@ -112,6 +90,35 @@
 				<echo>[ERROR] Bower was not found on your system. It could be installed with command: "sudo npm install -g bower"</echo>
 			</else>
 		</if>
+
+		<!-- Check Compass  -->
+		<exec command="which compass" outputProperty="compass.path"/>
+		<if>
+			<istrue value="${compass.path}"/>
+			<then>
+				<echo>[OK] Compass was found at ${compass.path}</echo>
+				<exec command="compass --version | awk 'NR==1{print $2}'" outputProperty="compass.version"/>
+				<echo>     Current version: ${compass.version}</echo>
+			</then>
+			<else>
+				<echo>[ERROR] Compass was not found on your system. To install it, run command "gem install --no-rdoc --no-ri sass compass".
+				</echo>
+			</else>
+		</if>
+
+		<!-- Check Compass  -->
+		<exec command="gem list sass-css-importer -i" outputProperty="gem.sass-css-importer"/>
+		<if>
+			<istrue value="${sass-css-importer}"/>
+			<then>
+				<echo>[OK] Gem "sass-css-importer" is installed</echo>
+			</then>
+			<else>
+				<echo>[ERROR] Missing gem "sass-css-importer". To install it, run command "gem install --no-rdoc --no-ri sass-css-importer".
+				</echo>
+			</else>
+		</if>
+		<echo></echo>
 	</target>
 
 </project>
