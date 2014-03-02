@@ -14,8 +14,6 @@ class FetchPropertiesTask extends BaseTask {
 	 * @return void
 	 */
 	public function main() {
-		parent::main();
-
 		if (!file_exists($this->getProject()->getProperty('file.properties'))) {
 
 			$remoteConfiguration = array();

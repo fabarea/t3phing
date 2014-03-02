@@ -14,8 +14,6 @@ class ClearDatabaseCacheTask extends BaseTask {
 	 */
 	public function main() {
 
-		parent::main();
-
 		$commands = array();
 		foreach ($this->getCacheTables() as $cacheTable) {
 			$commands[] = sprintf('%s -u %s -p%s -e "TRUNCATE table %s;" %s',

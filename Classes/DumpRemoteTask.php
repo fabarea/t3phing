@@ -24,8 +24,6 @@ class DumpRemoteTask extends BaseTask {
      */
     public function main() {
 
-		parent::main();
-
 	    // This will not work for TYPO3 < 6.0
 	    $cacheTables = array(
 		    'be_sessions',
@@ -116,7 +114,7 @@ class DumpRemoteTask extends BaseTask {
 		$command .= "'";
 
 		// if dryRun is set then, the command line is printed out
-		if ($this->properties['dryRun'] === 'true' || $this->properties['dryRun'] === TRUE) {
+		if ($this->isDryRun()) {
 			$this->log($command);
 		}
 		else {

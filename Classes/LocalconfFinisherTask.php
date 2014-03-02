@@ -23,14 +23,12 @@ class LocalconfFinisherTask extends BaseTask {
 	 */
 	public function main() {
 
-		parent::main();
-
 		// Makes sure it is possible to connecto to the server
 		if (!file_exists($this->directory)) {
 			throw new Exception("Exception thrown #1300533385:\n\n local directory does not exist : \"" . $this->directory . "\"\n\n", 1300533385);
 		}
 
-		if (! ($this->properties['dryRun'] === 'true' || $this->properties['dryRun'] === TRUE)) {
+		if (! $this->isDryRun()) {
 			// Replaces the database name, user and password
 			$content = file_get_contents($this->directory . 'typo3conf/localconf.php');
 

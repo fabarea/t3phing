@@ -24,11 +24,8 @@ class RsyncTask extends BaseTask {
      */
     public function main() {
 
-		parent::main();
-
 		// Makes sure it is possible to connecto to the server
-		if (! file_exists($this->localDirectory) &&
-				! ($this->properties['dryRun'] === 'true' || $this->properties['dryRun'] === TRUE)) {
+		if (! file_exists($this->localDirectory) && ! $this->isDryRun()) {
 			mkdir($this->localDirectory);
 		}
 
@@ -36,7 +33,7 @@ class RsyncTask extends BaseTask {
 		$command = "rsync -a --delete " . $this->getRemoteServerCredentials() . ':' . $this->remoteDirectory . ' ' . $this->localDirectory;
 
 		// if dryRun is set then, the command line is printed out
-		if ($this->properties['dryRun'] === 'true' || $this->properties['dryRun'] === TRUE) {
+		if ($this->isDryRun()) {
 			$this->log($command);
 		}
 		else {

@@ -19,13 +19,11 @@ class CommandLocalTask extends BaseTask {
 	 */
 	public function main() {
 
-		parent::main();
-
 		// commands that will retrieve the status of the remote working copy
 		$command = $this->command;
 
 		// if dryRun is set then, the command line is printed out
-		if ($this->properties['dryRun'] === 'true' || $this->properties['dryRun'] === TRUE) {
+		if ($this->isDryRun()) {
 			$this->log($command);
 		} else {
 			$results = $this->execute($command);
