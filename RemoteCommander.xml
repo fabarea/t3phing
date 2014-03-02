@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="RemoteCommander" basedir="Tasks" default="" >
+<project name="RemoteCommander" basedir="Tasks" default="">
 
 	<!--
 		==============================================
@@ -9,7 +9,7 @@
 	<target name="df" depends="diff"/>
 	<target name="diff" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Remote diff               |</echo>
+		<echo>Remote diff</echo>
 		<echo>-----------------------------</echo>
 		<gitDiffRemote/>
 	</target>
@@ -22,7 +22,7 @@
 	<target name="st" depends="status"/>
 	<target name="status" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Remote status             |</echo>
+		<echo>Remote status</echo>
 		<echo>-----------------------------</echo>
 		<gitStatusRemote/>
 	</target>

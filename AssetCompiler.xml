@@ -12,7 +12,7 @@
 	<!-- ============================================  -->
 	<target name="bootstrap-environment">
 		<echo>----------------------------------------------</echo>
-		<echo>| Prepare File Structure                      |</echo>
+		<echo>Prepare File Structure</echo>
 		<echo>----------------------------------------------</echo>
 		<mkdir dir="${resource.directory}/Fonts"/>
 		<mkdir dir="${resource.directory}/StyleSheets/Sass"/>
@@ -25,7 +25,7 @@
 	<!-- ============================================  -->
 	<target name="bower-install" depends="bootstrap-environment">
 		<echo>----------------------------------------------</echo>
-		<echo>| Installing Web Components                  |</echo>
+		<echo>Installing Web Components</echo>
 		<echo>----------------------------------------------</echo>
 		<exec command="cd htdocs/typo3conf/ext/speciality; bower install" checkreturn="true" logoutput="/dev/stdout"/>
 
@@ -33,7 +33,7 @@
 
 	<target name="bower-update" depends="bootstrap-environment">
 		<echo>----------------------------------------------</echo>
-		<echo>| Updating Web Components                     |</echo>
+		<echo>Updating Web Components</echo>
 		<echo>----------------------------------------------</echo>
 		<exec command="cd htdocs/typo3conf/ext/speciality; bower update" checkreturn="true" logoutput="/dev/stdout"/>
 
@@ -41,7 +41,7 @@
 
 	<target name="bower-status">
 		<echo>----------------------------------------------</echo>
-		<echo>| Installing Web Components                  |</echo>
+		<echo>Installing Web Components</echo>
 		<echo>----------------------------------------------</echo>
 		<exec command="cd htdocs/typo3conf/ext/speciality; bower list" checkreturn="true" logoutput="/dev/stdout"/>
 	</target>
@@ -51,9 +51,10 @@
 	<!-- ============================================  -->
 	<target name="css-compile" depends="bootstrap-environment">
 		<echo>-----------------------------</echo>
-		<echo>| Compiling CSS              |</echo>
+		<echo>Compiling CSS</echo>
 		<echo>-----------------------------</echo>
-		<exec command="cd htdocs/typo3conf/ext/speciality; compass compile -s compressed --force" checkreturn="true" logoutput="/dev/stdout"/>
+		<exec command="cd htdocs/typo3conf/ext/speciality; compass compile -s compressed --force" checkreturn="true"
+		      logoutput="/dev/stdout"/>
 	</target>
 
 	<!-- ============================================  -->
@@ -61,12 +62,13 @@
 	<!-- ============================================  -->
 	<target name="css-watch" depends="bootstrap-environment">
 		<echo>------------------------------</echo>
-		<echo>| Watching and compiling CSS  |</echo>
+		<echo>Watching and compiling CSS</echo>
 		<echo>------------------------------</echo>
 		<echo>Tip: alternatively use this command to have more output on the console as stylesheets are compiling.</echo>
 		<echo>$> cd htdocs/typo3conf/ext/speciality; compass watch -s compressed</echo>
 
-		<exec command="cd htdocs/typo3conf/ext/speciality; compass watch -s compressed" checkreturn="true" logoutput="/dev/stdout"/>
+		<exec command="cd htdocs/typo3conf/ext/speciality; compass watch -s compressed" checkreturn="true"
+		      logoutput="/dev/stdout"/>
 	</target>
 
 	<!-- ============================================  -->
@@ -74,7 +76,7 @@
 	<!-- ============================================  -->
 	<target name="check-system">
 		<echo>-----------------------------</echo>
-		<echo>| Checking environment       |</echo>
+		<echo>Checking environment</echo>
 		<echo>-----------------------------</echo>
 
 		<!-- Check Bower  -->
@@ -84,10 +86,11 @@
 			<then>
 				<echo>[OK] Bower was found at ${bower.path}</echo>
 				<exec command="bower --version" outputProperty="bower.version"/>
-				<echo>     Current version: ${bower.version}</echo>
+				<echo>Current version: ${bower.version}</echo>
 			</then>
 			<else>
-				<echo>[ERROR] Bower was not found on your system. It could be installed with command: "npm install -g bower"</echo>
+				<echo>[ERROR] Bower was not found on your system. It could be installed with command: "npm install -g bower"
+				</echo>
 			</else>
 		</if>
 
@@ -98,7 +101,7 @@
 			<then>
 				<echo>[OK] Compass was found at ${compass.path}</echo>
 				<exec command="compass --version | awk 'NR==1{print $2}'" outputProperty="compass.version"/>
-				<echo>     Current version: ${compass.version}</echo>
+				<echo>Current version: ${compass.version}</echo>
 			</then>
 			<else>
 				<echo>[ERROR] Compass was not found on your system. To install it, run:</echo>
@@ -118,7 +121,6 @@
 				<echo>gem install sass-css-importer --pre</echo>
 			</else>
 		</if>
-		<echo></echo>
 	</target>
 
 </project>

@@ -7,18 +7,17 @@
 		Entry Point
 		==============================================
 	-->
-	<target name="initialize" depends="dump, localconf, htaccess, symlink, typo3temp, uploads, user_upload"/>
-	<target name="initialize6" depends="dump6, htaccess, symlink, uploads, fileadmin"/>
-	<target name="reset" depends="dump6, clear_cache, warmup"/>
+	<target name="initialize" depends="import-dump, htaccess, symlink, uploads, fileadmin"/>
+	<target name="reset" depends="import-dump, clear_cache, warmup"/>
 
 	<!--
 		==============================================
 		Dump database
 		==============================================
 	-->
-	<target name="dump" depends="">
+	<target name="import-dump-legacy" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Dump database              |</echo>
+		<echo>Dump database</echo>
 		<echo>-----------------------------</echo>
 
 		<echo>Fetching remote database credentials...</echo>
@@ -67,10 +66,10 @@
 	</target>
 
 
-	<target name="d" depends="dump6"/>
-	<target name="dump6" depends="">
+	<target name="d" depends="import-dump"/>
+	<target name="import-dump" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Dump database              |</echo>
+		<echo>Dump database</echo>
 		<echo>-----------------------------</echo>
 
 		<echo>Fetching remote database credentials...</echo>
@@ -78,7 +77,7 @@
 
 		<echo>Dumping remote database...</echo>
 
-		<dumpRemote />
+		<dumpRemote/>
 
 		<echo>Fetching dump...</echo>
 		<rsync remoteDirectory="${remote.directory.temp}/${remote.database.name}.bz2"
@@ -129,7 +128,7 @@
 	-->
 	<target name="uploads" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Fetch uploads|</echo>
+		<echo>Fetch uploads|</echo>
 		<echo>-----------------------------</echo>
 		<echo>fetching files...</echo>
 		<rsync remoteDirectory="${remote.directory.documentRoot}/uploads"
@@ -139,7 +138,7 @@
 
 	<target name="user_upload" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Fetch resources files |</echo>
+		<echo>Fetch resources files</echo>
 		<echo>-----------------------------</echo>
 		<echo>fetching files...</echo>
 		<rsync remoteDirectory="${remote.directory.documentRoot}/fileadmin/user_upload"
@@ -148,7 +147,7 @@
 
 	<target name="fileadmin" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Fetch fileadmin files |</echo>
+		<echo>Fetch fileadmin files</echo>
 		<echo>-----------------------------</echo>
 		<echo>fetching files...</echo>
 		<rsync remoteDirectory="${remote.directory.documentRoot}/fileadmin"
@@ -156,9 +155,9 @@
 	</target>
 
 	<!-- ============================================== -->
-	<target name="localconf" depends="">
+	<target name="localconf-legacy" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| localconf.php |</echo>
+		<echo>localconf.php</echo>
 		<echo>-----------------------------</echo>
 		<echo>Fetching file...</echo>
 		<commandLocal
@@ -175,27 +174,21 @@
 	<!-- ============================================== -->
 	<target name="htaccess" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| .htaccess |</echo>
+		<echo>.htaccess</echo>
 		<echo>-----------------------------</echo>
 		<echo>Fetching file...</echo>
-		<commandLocal command="scp -q ${remote.credentials}:${remote.directory.documentRoot}/.htaccess ${local.directory.documentRoot}//"/>
+		<commandLocal
+				command="scp -q ${remote.credentials}:${remote.directory.documentRoot}/.htaccess ${local.directory.documentRoot}//"/>
 	</target>
 
 	<!-- ============================================== -->
 	<target name="symlink" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Symlink |</echo>
+		<echo>Symlink</echo>
 		<echo>-----------------------------</echo>
 		<echo>Creating symlink...</echo>
 		<delete file="${local.directory.documentRoot}/typo3_src"/>
 		<symlink target="${local.core.path}" link="${local.directory.documentRoot}/typo3_src"/>
 	</target>
 
-	<target name="typo3temp" depends="">
-		<echo>-----------------------------</echo>
-		<echo>| typo3temp |</echo>
-		<echo>-----------------------------</echo>
-		<echo>Creating typo3temp...</echo>
-		<mkdir dir="${local.directory.documentRoot}/typo3temp"/>
-	</target>
 </project>

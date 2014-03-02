@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <project name="CacheHandler" basedir="Tasks" default="">
-<!--
-		==============================================
-		Clear cache
-		==============================================
-	-->
+	<!--
+			==============================================
+			Clear cache
+			==============================================
+		-->
 	<target name="clear_cache" depends="c, cc, ccc"/>
-	<target name="c" depends="" >
+	<target name="c" depends="">
 		<echo>------------------------------</echo>
-		<echo>| Deleting cached depth 1     |</echo>
+		<echo>Deleting cached depth 1</echo>
 		<echo>------------------------------</echo>
 		<commandLocal command="rm -rf ${local.directory.documentRoot}/typo3temp/Cache"/>
 		<delete>
@@ -18,7 +18,7 @@
 
 	<target name="cc" depends="c">
 		<echo>------------------------------</echo>
-		<echo>| Deleting cached depth 2     |</echo>
+		<echo>Deleting cached depth 2</echo>
 		<echo>------------------------------</echo>
 		<delete>
 			<fileset refid="typo3temp"/>
@@ -27,7 +27,7 @@
 
 	<target name="ccc" depends="c, cc">
 		<echo>------------------------------</echo>
-		<echo>| Deleting cached depth 3     |</echo>
+		<echo>Deleting cached depth 3</echo>
 		<echo>------------------------------</echo>
 		<fetchProperties/>
 		<clearDatabaseCache/>
@@ -43,7 +43,7 @@
 	-->
 	<target name="warmup" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Warmup website             |</echo>
+		<echo>Warmup website</echo>
 		<echo>-----------------------------</echo>
 		<commandLocal command="curl -s -A &quot;Mozilla/5.0&quot; http://${local.domain}/typo3/index.php > /dev/null"/>
 		<commandLocal command="curl -s -I http://${local.domain}/index.php > /dev/null"/>

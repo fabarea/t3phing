@@ -23,11 +23,11 @@
 
 	<!-- Remote site configuration -->
 	<property name="remote.domain" value="example.com"/><!-- CHANGE_ME MAIN_DOMAIN WITHOUT WWW -->
-	<property name="remote.directory.home" value="CHANGE_ME"/><!-- ABSOLUTE PATH -->
+	<property name="remote.directory.home" value="/sites/${remote.domain}"/><!-- ABSOLUTE PATH -->
 	<property name="remote.directory.documentRoot" value="${remote.directory.home}/htdocs"/>
 	<property name="remote.database.credentials" value="${remote.directory.home}/configuration/Settings.php"/>
 
-	<!-- Properties for local -->
+	<!-- Local site configuration -->
 	<property name="local.domain" value="example.local"/>
 	<property name="local.directory.home" value="."/>
 	<property name="local.directory.documentRoot" value="htdocs"/>

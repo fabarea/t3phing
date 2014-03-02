@@ -82,20 +82,16 @@
 		<echo>---------------------------------------------</echo>
 		<echo>Import website locally</echo>
 		<echo>---------------------------------------------</echo>
-		<echo>phing dump6           - Fetch the database and build it again locally for TYPO3 6.0</echo>
-		<echo>phing dump            - Fetch the database and build it again locally</echo>
-		<echo>phing localconf       - Fetch localconf.php and add custom values - OBSOLETE WITH TYPO3 6.0</echo>
+		<echo>phing import-dump    - Fetch the database and build it again locally for TYPO3 6.0</echo>
 		<echo>phing htaccess        - Fetch the htaccess from the remote server</echo>
 		<echo>phing symlink         - Create symlinks to the core, current value "${local.core.path}"</echo>
-		<echo>phing typo3temp       - Create typo3temp directory</echo>
 		<echo>phing uploads         - Fetch uploads folder</echo>
 		<echo>phing fileadmin       - Fetch fileadmin</echo>
 		<echo>phing user_upload     - Fetch user_upload folder</echo>
 		<echo/>
-		<echo>phing d               - phing dump6</echo>
-		<echo>phing initialize      - dump, localconf, htaccess, symlink, typo3temp, uploads, user_upload</echo>
-		<echo>phing initialize6     - dump6, htaccess, symlink, uploads, fileadmin</echo>
-		<echo>phing reset           - dump6, clear_cache, warmup</echo>
+		<echo>phing d               - import-dump</echo>
+		<echo>phing initialize6     - import-dump, htaccess, symlink, uploads, fileadmin</echo>
+		<echo>phing reset           - import-dump, clear_cache, warmup</echo>
 
 		<echo/>
 		<echo>---------------------------------------------</echo>

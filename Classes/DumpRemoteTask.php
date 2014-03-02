@@ -33,7 +33,6 @@ class DumpRemoteTask extends BaseTask {
 		    'sys_history',
 		    'sys_registry',
 		    'sys_file_processedfile',
-		    'sys_refindex',
 		    'sys_lockedrecords',
 		    'tx_extensionmanager_domain_model_extension',
 		    'cache_imagesizes',

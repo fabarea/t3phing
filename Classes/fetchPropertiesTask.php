@@ -5,7 +5,7 @@
  */
 require_once('BaseTask.php');
 
-class fetchPropertiesTask extends BaseTask {
+class FetchPropertiesTask extends BaseTask {
 
 	/**
 	 * Main entry point.
@@ -18,10 +18,16 @@ class fetchPropertiesTask extends BaseTask {
 
 		if (!file_exists($this->getProject()->getProperty('file.properties'))) {
 
-			/** @var RemoteCredentialsService $remoteCredentialsService */
-			$remoteCredentialsService = new RemoteCredentialsService($this);
-			$remoteConfiguration = $remoteCredentialsService->getConfiguration();
-			$this->setProperties($remoteConfiguration);
+			// TRUE means it is a development instance
+			// -> fetch remote configuration
+			if (!$this->get('isProduction')) {
+
+				/** @var RemoteCredentialsService $remoteCredentialsService */
+				$remoteCredentialsService = new RemoteCredentialsService($this);
+				$remoteConfiguration = $remoteCredentialsService->getConfiguration();
+				$this->setProperties($remoteConfiguration);
+			}
+
 
 			/** @var LocalCredentialsService $localCredentialsService */
 			$localCredentialsService = new LocalCredentialsService($this);
