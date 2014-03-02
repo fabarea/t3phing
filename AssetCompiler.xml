@@ -8,22 +8,9 @@
 	<property name="component.jquery" value="${component.directory}/jquery/"/>
 
 	<!-- ============================================  -->
-	<!-- Target: bootstrap-environment                 -->
-	<!-- ============================================  -->
-	<target name="bootstrap-environment">
-		<echo>----------------------------------------------</echo>
-		<echo>Prepare File Structure</echo>
-		<echo>----------------------------------------------</echo>
-		<mkdir dir="${resource.directory}/Fonts"/>
-		<mkdir dir="${resource.directory}/StyleSheets/Sass"/>
-		<mkdir dir="${resource.directory}/Images"/>
-		<mkdir dir="${resource.directory}/JavaScript"/>
-	</target>
-
-	<!-- ============================================  -->
 	<!-- Target: bower                                 -->
 	<!-- ============================================  -->
-	<target name="bower-install" depends="bootstrap-environment">
+	<target name="bower-install">
 		<echo>----------------------------------------------</echo>
 		<echo>Installing Web Components</echo>
 		<echo>----------------------------------------------</echo>
@@ -31,7 +18,7 @@
 
 	</target>
 
-	<target name="bower-update" depends="bootstrap-environment">
+	<target name="bower-update">
 		<echo>----------------------------------------------</echo>
 		<echo>Updating Web Components</echo>
 		<echo>----------------------------------------------</echo>
@@ -49,25 +36,27 @@
 	<!-- ============================================  -->
 	<!-- Target: css                                   -->
 	<!-- ============================================  -->
-	<target name="css-compile" depends="bootstrap-environment">
+	<target name="package" depends="asset-package"/>
+	<target name="asset-package">
 		<echo>-----------------------------</echo>
-		<echo>Compiling CSS</echo>
+		<echo>Package Assets</echo>
 		<echo>-----------------------------</echo>
-		<exec command="cd htdocs/typo3conf/ext/speciality; grunt compile -s compressed --force" checkreturn="true"
+		<exec command="cd htdocs/typo3conf/ext/speciality; grunt package" checkreturn="true"
 		      logoutput="/dev/stdout"/>
 	</target>
 
 	<!-- ============================================  -->
 	<!-- Target: watch                                   -->
 	<!-- ============================================  -->
-	<target name="css-watch" depends="bootstrap-environment">
+	<target name="asset-watch">
 		<echo>------------------------------</echo>
 		<echo>Watching and compiling CSS</echo>
 		<echo>------------------------------</echo>
-		<echo>Tip: alternatively use this command to have more output on the console as stylesheets are compiling.</echo>
-		<echo>$> cd htdocs/typo3conf/ext/speciality; grunt watch -s compressed</echo>
+		<echo>Files are being watched but you will not see any further info here.</echo>
+		<echo>Phing is not appropriate for this, do rather:</echo>
+		<echo>$> cd htdocs/typo3conf/ext/speciality; grunt watch</echo>
 
-		<exec command="cd htdocs/typo3conf/ext/speciality; grunt watch -s compressed" checkreturn="true"
+		<exec command="cd htdocs/typo3conf/ext/speciality; grunt watch" checkreturn="true"
 		      logoutput="/dev/stdout"/>
 	</target>
 
