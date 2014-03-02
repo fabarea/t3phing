@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
 <project name="CacheHandler" basedir="Tasks" default="">
-	<!--
-			==============================================
-			Clear cache
-			==============================================
-		-->
+
+	<!-- ============================================== -->
+	<!-- Clear cache                                    -->
+	<!-- ============================================== -->
 	<target name="clear_cache" depends="c, cc, ccc"/>
 	<target name="c" depends="">
 		<echo>------------------------------</echo>
@@ -36,11 +35,7 @@
 		</delete>
 	</target>
 
-	<!--
-		==============================================
-		System warmup
-		==============================================
-	-->
+	<!-- System warmup -->
 	<target name="warmup" depends="">
 		<echo>-----------------------------</echo>
 		<echo>Warmup website</echo>

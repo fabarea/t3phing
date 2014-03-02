@@ -8,7 +8,7 @@
 	<property name="component.jquery" value="${component.directory}/jquery/"/>
 
 	<!-- ============================================  -->
-	<!-- Target: bootstrap-environment                          -->
+	<!-- Target: bootstrap-environment                 -->
 	<!-- ============================================  -->
 	<target name="bootstrap-environment">
 		<echo>----------------------------------------------</echo>
@@ -53,7 +53,7 @@
 		<echo>-----------------------------</echo>
 		<echo>Compiling CSS</echo>
 		<echo>-----------------------------</echo>
-		<exec command="cd htdocs/typo3conf/ext/speciality; compass compile -s compressed --force" checkreturn="true"
+		<exec command="cd htdocs/typo3conf/ext/speciality; grunt compile -s compressed --force" checkreturn="true"
 		      logoutput="/dev/stdout"/>
 	</target>
 
@@ -65,9 +65,9 @@
 		<echo>Watching and compiling CSS</echo>
 		<echo>------------------------------</echo>
 		<echo>Tip: alternatively use this command to have more output on the console as stylesheets are compiling.</echo>
-		<echo>$> cd htdocs/typo3conf/ext/speciality; compass watch -s compressed</echo>
+		<echo>$> cd htdocs/typo3conf/ext/speciality; grunt watch -s compressed</echo>
 
-		<exec command="cd htdocs/typo3conf/ext/speciality; compass watch -s compressed" checkreturn="true"
+		<exec command="cd htdocs/typo3conf/ext/speciality; grunt watch -s compressed" checkreturn="true"
 		      logoutput="/dev/stdout"/>
 	</target>
 
@@ -89,38 +89,40 @@
 				<echo>Current version: ${bower.version}</echo>
 			</then>
 			<else>
-				<echo>[ERROR] Bower was not found on your system. It could be installed with command: "npm install -g bower"
-				</echo>
+				<echo>[ERROR] Bower was not found on your system. To install it, run:</echo>
+				<echo>npm install -g bower</echo>
 			</else>
 		</if>
+		<echo> </echo>
 
-		<!-- Check Compass  -->
-		<exec command="which compass" outputProperty="compass.path"/>
+		<!-- Check Grunt  -->
+		<exec command="which grunt" outputProperty="grunt.path"/>
 		<if>
-			<istrue value="${compass.path}"/>
+			<istrue value="${grunt.path}"/>
 			<then>
-				<echo>[OK] Compass was found at ${compass.path}</echo>
-				<exec command="compass --version | awk 'NR==1{print $2}'" outputProperty="compass.version"/>
-				<echo>Current version: ${compass.version}</echo>
+				<echo>[OK] Grunt was found at ${grunt.path}</echo>
+				<exec command="grunt --version | awk '{print $2}'" outputProperty="grunt.version"/>
+				<echo>Current version: ${grunt.version}</echo>
 			</then>
 			<else>
-				<echo>[ERROR] Compass was not found on your system. To install it, run:</echo>
-				<echo>gem install --no-rdoc --no-ri sass compass; gem install sass-css-importer --pre</echo>
+				<echo>[ERROR] Grunt was not found on your system. To install it, run:</echo>
+				<echo>npm install -g grunt-cli</echo>
 			</else>
+		</if>
+		<echo> </echo>
+
+		<!-- Check node modules have been installed -->
+		<if>
+			<not>
+				<available file="${local.directory.documentRoot}/typo3conf/ext/speciality/node_modules/grunt" type="dir"
+				           property="directory.exists"/>
+			</not>
+			<then>
+				<echo>[ERROR] Missing node modules. To install them, run:</echo>
+				<echo>cd ${local.directory.documentRoot}/htdocs/typo3conf/ext/speciality; npm install</echo>
+			</then>
 		</if>
 
-		<!-- Check Compass  -->
-		<exec command="gem list sass-css-importer -i" outputProperty="gem.sass-css-importer"/>
-		<if>
-			<istrue value="${sass-css-importer}"/>
-			<then>
-				<echo>[OK] Gem "sass-css-importer" is installed</echo>
-			</then>
-			<else>
-				<echo>[ERROR] Missing gem "sass-css-importer". To install it, run:</echo>
-				<echo>gem install sass-css-importer --pre</echo>
-			</else>
-		</if>
 	</target>
 
 </project>
