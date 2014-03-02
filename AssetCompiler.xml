@@ -108,7 +108,7 @@
 			</not>
 			<then>
 				<echo>[ERROR] Missing node modules. To install them, run:</echo>
-				<echo>cd ${local.directory.documentRoot}/htdocs/typo3conf/ext/speciality; npm install</echo>
+				<echo>cd ${local.directory.documentRoot}/typo3conf/ext/speciality; npm install</echo>
 			</then>
 		</if>
 
