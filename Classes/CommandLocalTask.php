@@ -5,7 +5,7 @@
  */
 require_once('BaseTask.php');
 
-class CommandLocal extends BaseTask {
+class CommandLocalTask extends BaseTask {
 
 	/**
 	 * @var string
@@ -19,8 +19,7 @@ class CommandLocal extends BaseTask {
 	 */
 	public function main() {
 
-		// Initialize task
-		$this->initialize();
+		parent::main();
 
 		// commands that will retrieve the status of the remote working copy
 		$command = $this->command;
@@ -35,10 +34,6 @@ class CommandLocal extends BaseTask {
 			}
 		}
 	}
-
-	// -------------------------------
-	// Set properties from XML
-	// -------------------------------
 
 	/**
 	 * Set the remote path on the server

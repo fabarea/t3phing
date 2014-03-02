@@ -10,7 +10,7 @@
 		<echo>------------------------------</echo>
 		<echo>| Deleting cached depth 1     |</echo>
 		<echo>------------------------------</echo>
-		<commandLocal command="rm -rf ${site.local.directory}typo3temp/Cache"/>
+		<commandLocal command="rm -rf ${local.directory.documentRoot}/typo3temp/Cache"/>
 		<delete>
 			<fileset refid="typo3conf"/>
 		</delete>
@@ -29,14 +29,12 @@
 		<echo>------------------------------</echo>
 		<echo>| Deleting cached depth 3     |</echo>
 		<echo>------------------------------</echo>
-		<clearCache database="${database.local.name}" username="${database.local.username}"
-		            password="${database.local.password}" mysqlPath="${command.local.mysql}"/>
-
+		<fetchProperties/>
+		<clearDatabaseCache/>
 		<delete>
 			<fileset refid="processedFiles"/>
 		</delete>
 	</target>
-
 
 	<!--
 		==============================================
@@ -47,8 +45,8 @@
 		<echo>-----------------------------</echo>
 		<echo>| Warmup website             |</echo>
 		<echo>-----------------------------</echo>
-		<commandLocal command="curl -s -A &quot;Mozilla/5.0&quot; http://${domain.local}/typo3/index.php > /dev/null"/>
-		<commandLocal command="curl -s -I http://${domain.local}/index.php > /dev/null"/>
+		<commandLocal command="curl -s -A &quot;Mozilla/5.0&quot; http://${local.domain}/typo3/index.php > /dev/null"/>
+		<commandLocal command="curl -s -I http://${local.domain}/index.php > /dev/null"/>
 	</target>
 
 </project>

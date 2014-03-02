@@ -18,129 +18,106 @@
 	-->
 	<target name="dump" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Dump database |</echo>
+		<echo>| Dump database              |</echo>
 		<echo>-----------------------------</echo>
+
+		<echo>Fetching remote database credentials...</echo>
+		<fetchProperties/>
 
 		<echo>Dumping remote database...</echo>
 
-		<dumpRemote
-				credentials="${server.credentials}"
-				directory="${site.remote.directory.temp}"
-				database="${database.remote.name}"
-				username="${database.remote.username}"
-				password="${database.remote.password}"
-				additionalIgnoreTables="tx_realurl_chashcache, tx_realurl_errorlog, tx_realurl_pathcache,
-									tx_realurl_redirects, tx_realurl_uniqalias , tx_realurl_urldecodecache, tx_realurl_urlencodecache, cache_extensions"
-				/>
+		<dumpRemote/>
 
 		<echo>Fetching dump...</echo>
-		<rsync credentials="${server.credentials}" remoteDirectory="${site.remote.directory.temp}${database.remote.name}.bz2"
-		       localDirectory="${site.local.directory}"/>
+		<rsync remoteDirectory="${remote.directory.temp}/${remote.database.name}.bz2"
+		       localDirectory="${local.directory.temp}/"/>
 
 		<echo>Extracting file...</echo>
-		<commandLocal command="tar -C ${site.local.directory} -xjf ${site.local.directory}${database.remote.name}.bz2"/>
+		<commandLocal command="tar -C ${local.directory.temp}/ -xjf ${local.directory.temp}/${remote.database.name}.bz2"/>
 
 		<echo>Reset database...</echo>
 		<commandLocal
-				command="${mysql.local} -e &quot;DROP DATABASE ${database.local.name}; CREATE DATABASE ${database.local.name};&quot;"/>
+				command="${mysql.local} -e &quot;DROP DATABASE ${local.database.name}; CREATE DATABASE ${local.database.name};&quot;"/>
 
 		<echo>Import dump...</echo>
-		<commandLocal command="${mysql.local} ${database.local.name} &lt; ${site.local.directory}${database.remote.name}.sql"/>
+		<commandLocal command="${mysql.local} ${local.database.name} &lt; ${local.directory.temp}/${remote.database.name}.sql"/>
 
 		<echo>Fine tunes database...</echo>
 		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE sys_domain SET domainName = REPLACE(domainName, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+				command="${mysql.local} -e &quot;UPDATE sys_domain SET domainName = REPLACE(domainName, '${remote.domain}', '${local.domain}');&quot; ${local.database.name}"/>
 		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE sys_template SET title = REPLACE(title, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+				command="${mysql.local} -e &quot;UPDATE sys_template SET title = REPLACE(title, '${remote.domain}', '${local.domain}');&quot; ${local.database.name}"/>
 		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE sys_template SET config = REPLACE(config, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+				command="${mysql.local} -e &quot;UPDATE sys_template SET config = REPLACE(config, '${remote.domain}', '${local.domain}');&quot; ${local.database.name}"/>
 		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE sys_template SET constants = REPLACE(constants, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+				command="${mysql.local} -e &quot;UPDATE sys_template SET constants = REPLACE(constants, '${remote.domain}', '${local.domain}');&quot; ${local.database.name}"/>
 		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE pages SET title = REPLACE(title, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+				command="${mysql.local} -e &quot;UPDATE pages SET title = REPLACE(title, '${remote.domain}', '${local.domain}');&quot; ${local.database.name}"/>
 
 		<!-- reset database password for admin user -->
 		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE be_users SET username = 'admin', password = '5f4dcc3b5aa765d61d8327deb882cf99' WHERE username = 'ecoadmin';&quot; ${database.local.name}"/>
+				command="${mysql.local} -e &quot;UPDATE be_users SET username = 'admin', password = '5f4dcc3b5aa765d61d8327deb882cf99' WHERE username = 'ecoadmin';&quot; ${local.database.name}"/>
 
 		<echo>Clean up environment...</echo>
-		<commandLocal command="rm -f ${site.local.directory}${database.remote.name}.bz2"/>
-		<commandLocal command="rm -f ${site.local.directory}${database.remote.name}.sql"/>
+		<commandLocal command="rm -f ${local.directory.temp}/${remote.database.name}.bz2"/>
+		<commandLocal command="rm -f ${local.directory.temp}/${remote.database.name}.sql"/>
 
-		<commandRemote credentials="${server.credentials}" command="rm ${site.remote.directory.temp}${database.remote.name}.sql"/>
-		<commandRemote credentials="${server.credentials}" command="rm ${site.remote.directory.temp}${database.remote.name}.bz2"/>
+		<commandRemote command="rm ${remote.directory.temp}/${remote.database.name}.sql"/>
+		<commandRemote command="rm ${remote.directory.temp}/${remote.database.name}.bz2"/>
 	</target>
 
 
 	<target name="d" depends="dump6"/>
 	<target name="dump6" depends="">
 		<echo>-----------------------------</echo>
-		<echo>| Dump database |</echo>
+		<echo>| Dump database              |</echo>
 		<echo>-----------------------------</echo>
+
+		<echo>Fetching remote database credentials...</echo>
+		<fetchProperties/>
+
 		<echo>Dumping remote database...</echo>
 
-		<dumpRemote credentials="${server.credentials}"
-		            directory="${site.remote.directory.temp}"
-		            database="${database.remote.name}"
-		            username="${database.remote.username}"
-		            password="${database.remote.password}"
-		            additionalIgnoreTables="tx_realurl_chashcache, tx_realurl_errorlog, tx_realurl_pathcache,
-									tx_realurl_redirects, tx_realurl_uniqalias , tx_realurl_urldecodecache, tx_realurl_urlencodecache,
-									tx_extensionmanager_domain_model_extension
-									"
-				/>
+		<dumpRemote />
 
 		<echo>Fetching dump...</echo>
-		<rsync credentials="${server.credentials}" remoteDirectory="${site.remote.directory.temp}${database.remote.name}.bz2"
-		       localDirectory="${site.local.directory}"/>
+		<rsync remoteDirectory="${remote.directory.temp}/${remote.database.name}.bz2"
+		       localDirectory="${local.directory.temp}/"/>
 
 		<echo>Extracting file...</echo>
-		<commandLocal command="tar -C ${site.local.directory} -xjf ${site.local.directory}${database.remote.name}.bz2"/>
+		<commandLocal
+				command="tar -C ${local.directory.temp}/ -xjf ${local.directory.temp}/${remote.database.name}.bz2"/>
+
 
 		<echo>Reset database...</echo>
 		<commandLocal
-				command="${mysql.local} -e &quot;DROP DATABASE ${database.local.name}; CREATE DATABASE ${database.local.name};&quot;"/>
+				command="${mysql.local} -e &quot;DROP DATABASE ${local.database.name}; CREATE DATABASE ${local.database.name};&quot;"/>
 
 		<echo>Import dump...</echo>
-		<commandLocal command="${mysql.local} ${database.local.name} &lt; ${site.local.directory}${database.remote.name}.sql"/>
-
+		<commandLocal command="${mysql.local} ${local.database.name} &lt; ${local.directory.temp}/${remote.database.name}.sql"/>
 
 		<echo>Fine tunes database...</echo>
 		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE sys_domain SET domainName = REPLACE(domainName, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+				command="${mysql.local} -e &quot;UPDATE sys_domain SET domainName = REPLACE(domainName, '${remote.domain}', '${local.domain}');&quot; ${local.database.name}"/>
 		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE sys_template SET title = REPLACE(title, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+				command="${mysql.local} -e &quot;UPDATE sys_template SET title = REPLACE(title, '${remote.domain}', '${local.domain}');&quot; ${local.database.name}"/>
 		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE sys_template SET config = REPLACE(config, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+				command="${mysql.local} -e &quot;UPDATE sys_template SET config = REPLACE(config, '${remote.domain}', '${local.domain}');&quot; ${local.database.name}"/>
 		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE sys_template SET constants = REPLACE(constants, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+				command="${mysql.local} -e &quot;UPDATE sys_template SET constants = REPLACE(constants, '${remote.domain}', '${local.domain}');&quot; ${local.database.name}"/>
 		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE pages SET title = REPLACE(title, '${domain.remote}', '${domain.local}');&quot; ${database.local.name}"/>
+				command="${mysql.local} -e &quot;UPDATE pages SET title = REPLACE(title, '${remote.domain}', '${local.domain}');&quot; ${local.database.name}"/>
 
 		<!-- reset database password for admin user -->
 		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE be_users SET username = 'admin', password = '5f4dcc3b5aa765d61d8327deb882cf99' WHERE username = 'ecoadmin';&quot; ${database.local.name}"/>
+				command="${mysql.local} -e &quot;UPDATE be_users SET username = 'admin', password = '5f4dcc3b5aa765d61d8327deb882cf99' WHERE username = 'ecoadmin';&quot; ${local.database.name}"/>
 
 		<echo>Clean up environment...</echo>
-		<commandLocal command="rm -f ${site.local.directory}${database.remote.name}.bz2"/>
-		<commandLocal command="rm -f ${site.local.directory}${database.remote.name}.sql"/>
+		<commandLocal command="rm -f ${local.directory.temp}/${remote.database.name}.bz2"/>
+		<commandLocal command="rm -f ${local.directory.temp}/${remote.database.name}.sql"/>
 
-		<commandRemote credentials="${server.credentials}" command="rm ${site.remote.directory.temp}${database.remote.name}.sql"/>
-		<commandRemote credentials="${server.credentials}" command="rm ${site.remote.directory.temp}${database.remote.name}.bz2"/>
-
-
-		<echo>Writing local credential...</echo>
-		<echo file="configuration/Settings.php" append="false"><![CDATA[<?php
-
-// database credentials
-$GLOBALS['TYPO3_CONF_VARS']['DB']['database'] = '${database.local.name}';
-$GLOBALS['TYPO3_CONF_VARS']['DB']['password'] = '${database.local.password}';
-$GLOBALS['TYPO3_CONF_VARS']['DB']['username'] = '${database.local.username}';
-$GLOBALS['TYPO3_CONF_VARS']['DB']['host'] = '${database.local.host}';
-
-// password for all installToolPassword
-$GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d8327deb882cf99';
-?>]]></echo>
+		<commandRemote command="rm ${remote.directory.temp}/${remote.database.name}.sql"/>
+		<commandRemote command="rm ${remote.directory.temp}/${remote.database.name}.bz2"/>
 
 	</target>
 
@@ -155,9 +132,8 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 		<echo>| Fetch uploads|</echo>
 		<echo>-----------------------------</echo>
 		<echo>fetching files...</echo>
-		<rsync credentials="${server.credentials}"
-		       remoteDirectory="${site.remote.directory}uploads"
-		       localDirectory="${site.local.directory}"/>
+		<rsync remoteDirectory="${remote.directory.documentRoot}/uploads"
+		       localDirectory="${local.directory.documentRoot}/"/>
 
 	</target>
 
@@ -166,9 +142,8 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 		<echo>| Fetch resources files |</echo>
 		<echo>-----------------------------</echo>
 		<echo>fetching files...</echo>
-		<rsync credentials="${server.credentials}"
-		       remoteDirectory="${site.remote.directory}fileadmin/user_upload"
-		       localDirectory="${site.local.directory}fileadmin"/>
+		<rsync remoteDirectory="${remote.directory.documentRoot}/fileadmin/user_upload"
+		       localDirectory="${local.directory.documentRoot}/fileadmin"/>
 	</target>
 
 	<target name="fileadmin" depends="">
@@ -176,9 +151,8 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 		<echo>| Fetch fileadmin files |</echo>
 		<echo>-----------------------------</echo>
 		<echo>fetching files...</echo>
-		<rsync credentials="${server.credentials}"
-		       remoteDirectory="${site.remote.directory}fileadmin"
-		       localDirectory="${site.local.directory}"/>
+		<rsync remoteDirectory="${remote.directory.documentRoot}/fileadmin"
+		       localDirectory="${local.directory.documentRoot}/"/>
 	</target>
 
 	<!-- ============================================== -->
@@ -188,14 +162,14 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 		<echo>-----------------------------</echo>
 		<echo>Fetching file...</echo>
 		<commandLocal
-				command="scp -q ${server.credentials}:${site.remote.directory}typo3conf/localconf.php ${site.local.directory}typo3conf/localconf.php"/>
+				command="scp -q ${remote.credentials}:${remote.directory.documentRoot}/typo3conf/localconf.php ${local.directory.documentRoot}/typo3conf/localconf.php"/>
 
 		<echo>Updating localconf...</echo>
-		<localconfFinisher directory="${site.local.directory}"
-		                   database="${database.local.name}"
-		                   username="${database.local.username}"
-		                   password="${database.local.password}"
-		                   host="${database.local.host}"/>
+		<localconfFinisher directory="${local.directory.documentRoot}/"
+		                   database="${local.database.name}"
+		                   username="${local.database.username}"
+		                   password="${local.database.password}"
+		                   host="${local.database.host}"/>
 	</target>
 
 	<!-- ============================================== -->
@@ -204,7 +178,7 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 		<echo>| .htaccess |</echo>
 		<echo>-----------------------------</echo>
 		<echo>Fetching file...</echo>
-		<commandLocal command="scp -q ${server.credentials}:${site.remote.directory}.htaccess ${site.local.directory}/"/>
+		<commandLocal command="scp -q ${remote.credentials}:${remote.directory.documentRoot}/.htaccess ${local.directory.documentRoot}//"/>
 	</target>
 
 	<!-- ============================================== -->
@@ -213,8 +187,8 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 		<echo>| Symlink |</echo>
 		<echo>-----------------------------</echo>
 		<echo>Creating symlink...</echo>
-		<delete file="${site.local.directory}typo3_src"/>
-		<symlink target="${path.core}" link="${site.local.directory}typo3_src"/>
+		<delete file="${local.directory.documentRoot}/typo3_src"/>
+		<symlink target="${local.core.path}" link="${local.directory.documentRoot}/typo3_src"/>
 	</target>
 
 	<target name="typo3temp" depends="">
@@ -222,6 +196,6 @@ $GLOBALS['TYPO3_CONF_VARS']['BE']['installToolPassword'] = '5f4dcc3b5aa765d61d83
 		<echo>| typo3temp |</echo>
 		<echo>-----------------------------</echo>
 		<echo>Creating typo3temp...</echo>
-		<mkdir dir="${site.local.directory}typo3temp"/>
+		<mkdir dir="${local.directory.documentRoot}/typo3temp"/>
 	</target>
 </project>

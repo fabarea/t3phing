@@ -87,7 +87,7 @@
 				<echo>     Current version: ${bower.version}</echo>
 			</then>
 			<else>
-				<echo>[ERROR] Bower was not found on your system. It could be installed with command: "sudo npm install -g bower"</echo>
+				<echo>[ERROR] Bower was not found on your system. It could be installed with command: "npm install -g bower"</echo>
 			</else>
 		</if>
 
@@ -101,8 +101,8 @@
 				<echo>     Current version: ${compass.version}</echo>
 			</then>
 			<else>
-				<echo>[ERROR] Compass was not found on your system. To install it, run command "gem install --no-rdoc --no-ri sass compass".
-				</echo>
+				<echo>[ERROR] Compass was not found on your system. To install it, run:</echo>
+				<echo>gem install --no-rdoc --no-ri sass compass; gem install sass-css-importer --pre</echo>
 			</else>
 		</if>
 
@@ -114,8 +114,8 @@
 				<echo>[OK] Gem "sass-css-importer" is installed</echo>
 			</then>
 			<else>
-				<echo>[ERROR] Missing gem "sass-css-importer". To install it, run command "gem install --no-rdoc --no-ri sass-css-importer".
-				</echo>
+				<echo>[ERROR] Missing gem "sass-css-importer". To install it, run:</echo>
+				<echo>gem install sass-css-importer --pre</echo>
 			</else>
 		</if>
 		<echo></echo>

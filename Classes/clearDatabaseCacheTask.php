@@ -5,42 +5,7 @@
  */
 require_once('BaseTask.php');
 
-class ClearCacheTask extends BaseTask {
-
-	/**
-	 * @var string
-	 */
-	protected $credentials = '';
-
-	/**
-	 * @var string
-	 */
-	protected $directory = '';
-
-	/**
-	 * @var string
-	 */
-	protected $database;
-
-	/**
-	 * @var string
-	 */
-	protected $username;
-
-	/**
-	 * @var string
-	 */
-	protected $password;
-
-	/**
-	 * @var string
-	 */
-	protected $host;
-
-	/**
-	 * @var string
-	 */
-	protected $mysqlPath;
+class ClearDatabaseCacheTask extends BaseTask {
 
 	/**
 	 * Main entry point.
@@ -49,17 +14,16 @@ class ClearCacheTask extends BaseTask {
 	 */
 	public function main() {
 
-		// Initialize task
-		$this->initialize();
+		parent::main();
 
 		$commands = array();
 		foreach ($this->getCacheTables() as $cacheTable) {
 			$commands[] = sprintf('%s -u %s -p%s -e "TRUNCATE table %s;" %s',
-				$this->mysqlPath,
-				$this->username,
-				$this->password,
+				$this->getMysqlBinary(),
+				$this->getUsername(),
+				$this->getPassword(),
 				$cacheTable,
-				$this->database
+				$this->getDatabase()
 			);
 		}
 
@@ -104,15 +68,16 @@ class ClearCacheTask extends BaseTask {
 			$result = array();
 
 			$request = sprintf("SELECT GROUP_CONCAT(DISTINCT table_name) FROM information_schema.tables WHERE table_schema = '%s' AND table_name like '%s%%';",
-				$this->database,
+				$this->getDatabase(),
 				$prefix
 			);
 			$command = sprintf('%s -u %s -p%s -e "%s"',
-				$this->mysqlPath,
-				$this->username,
-				$this->password,
+				$this->getMysqlBinary(),
+				$this->getUsername(),
+				$this->getPassword(),
 				$request
 			);
+
 			// get the result
 			exec($command, $result);
 
@@ -124,48 +89,39 @@ class ClearCacheTask extends BaseTask {
 		return $cacheTables;
 	}
 
-	// -------------------------------
-	// Set properties from XML
-	// -------------------------------
-
 	/**
-	 * @param string $value
-	 * @return void
+	 * @return string
 	 */
-	public function setDatabase($value) {
-		$this->database = $value;
+	protected function getDatabase() {
+		return $this->get($this->localDatabaseProperty);
 	}
 
 	/**
-	 * @param string $value
-	 * @return void
+	 * @return string
 	 */
-	public function setUsername($value) {
-		$this->username = $value;
+	public function getUsername() {
+		return $this->get($this->localUsernameProperty);
 	}
 
 	/**
-	 * @param string $value
-	 * @return void
+	 * @return string
 	 */
-	public function setPassword($value) {
-		$this->password = $value;
+	public function getPassword() {
+		return $this->get($this->localPasswordProperty);
 	}
 
 	/**
-	 * @param string $value
-	 * @return void
+	 * @return string
 	 */
-	public function setHost($value) {
-		$this->host = $value;
+	public function getHost() {
+		return $this->get($this->localHostProperty);
 	}
 
 	/**
-	 * @param string $value
-	 * @return void
+	 * @return string
 	 */
-	public function setMysqlPath($value) {
-		$this->mysqlPath = $value;
+	public function getMysqlBinary() {
+		return $this->get($this->localMysqlBinaryProperty);
 	}
 
 }

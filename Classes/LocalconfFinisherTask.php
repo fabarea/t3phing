@@ -5,7 +5,7 @@
  */
 require_once('BaseTask.php');
 
-class LocalconfFinisher extends BaseTask {
+class LocalconfFinisherTask extends BaseTask {
 
 	/**
 	 * @var string
@@ -23,8 +23,7 @@ class LocalconfFinisher extends BaseTask {
 	 */
 	public function main() {
 
-		// Initialize task
-		$this->initialize();
+		parent::main();
 
 		// Makes sure it is possible to connecto to the server
 		if (!file_exists($this->directory)) {
@@ -59,10 +58,6 @@ class LocalconfFinisher extends BaseTask {
 			file_put_contents($this->directory . 'typo3conf/localconf.php', $content);
 		}
 	}
-
-	// -------------------------------
-	// Set properties from XML
-	// -------------------------------
 
 	/**
 	 * Set the remote path on the server

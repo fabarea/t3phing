@@ -11,7 +11,7 @@
 		<echo>-----------------------------</echo>
 		<echo>| Remote diff               |</echo>
 		<echo>-----------------------------</echo>
-		<gitDiffRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
+		<gitDiffRemote/>
 	</target>
 
 	<!--
@@ -24,7 +24,7 @@
 		<echo>-----------------------------</echo>
 		<echo>| Remote status             |</echo>
 		<echo>-----------------------------</echo>
-		<gitStatusRemote directory="${site.remote.directory}" credentials="${server.credentials}"/>
+		<gitStatusRemote/>
 	</target>
 
 

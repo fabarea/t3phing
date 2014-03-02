@@ -5,27 +5,26 @@
  */
 require_once('BaseTask.php');
 
-class Rsync extends BaseTask {
+class RsyncTask extends BaseTask {
 
 	/**
 	 * @var string
 	 */
-	protected $credentials = '';
+	protected $remoteDirectory;
 
 	/**
 	 * @var string
 	 */
-	protected $directory = '';
+	protected $localDirectory;
 
-    /**
+	/**
      * Main entry point.
 	 *
      * @return void
      */
     public function main() {
 
-		// Initialize task
-		$this->initialize();
+		parent::main();
 
 		// Makes sure it is possible to connecto to the server
 		if (! file_exists($this->localDirectory) &&
@@ -34,7 +33,7 @@ class Rsync extends BaseTask {
 		}
 
 		// commands that will retrieve the status of the remote working copy
-		$command = "rsync -a --delete " . $this->credentials . ':' . $this->remoteDirectory . ' ' . $this->localDirectory;
+		$command = "rsync -a --delete " . $this->getRemoteServerCredentials() . ':' . $this->remoteDirectory . ' ' . $this->localDirectory;
 
 		// if dryRun is set then, the command line is printed out
 		if ($this->properties['dryRun'] === 'true' || $this->properties['dryRun'] === TRUE) {
@@ -47,20 +46,6 @@ class Rsync extends BaseTask {
 			}
 		}
 	}
-
-	// -------------------------------
-    // Set properties from XML
-    // -------------------------------
-
-    /**
-     * Set the credentials information
-	 *
-     * @param string $value
-     * @return void
-     */
-    public function setCredentials($value){
-        $this->credentials = $value;
-    }
 
     /**
      * Set the local directory

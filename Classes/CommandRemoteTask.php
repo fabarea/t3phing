@@ -23,7 +23,7 @@
  */
 require_once('BaseTask.php');
 
-class CommandRemote extends BaseTask {
+class CommandRemoteTask extends BaseTask {
 
 	/**
 	 * @var string
@@ -42,16 +42,10 @@ class CommandRemote extends BaseTask {
      */
     public function main() {
 
-		// Initialize task
-		$this->initialize();
-
-		// Makes sure it is possible to connect to the server
-		if ($this->credentials == '') {
-			throw new Exception ("Exception thrown #1300533385: credentials is empty can not connect to the server\n", 1300533385);
-		}
+		parent::main();
 
 		// commands that will retrieve the status of the remote working copy
-		$command = 'ssh ' . $this->credentials . " '" . $this->command . "'";
+		$command = 'ssh ' . $this->getRemoteServerCredentials() . " '" . $this->command . "'";
 
 		// if dryRun is set then, the command line is printed out
 		if ($this->properties['dryRun'] === 'true' || $this->properties['dryRun'] === TRUE) {
@@ -64,10 +58,6 @@ class CommandRemote extends BaseTask {
 			}
 		}
 	}
-
-	// -------------------------------
-    // Set properties from XML
-    // -------------------------------
 
     /**
      * Set the remote path on the server
