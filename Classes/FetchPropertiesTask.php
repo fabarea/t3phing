@@ -19,7 +19,7 @@ class FetchPropertiesTask extends BaseTask {
 			$remoteConfiguration = array();
 
 			// TRUE means it is a development instance and we must fetch remote configuration.
-			if (!$this->get('isProduction')) {
+			if ($this->get('is.server.development')) {
 
 				/** @var RemoteCredentialsService $remoteCredentialsService */
 				$remoteCredentialsService = new RemoteCredentialsService($this);

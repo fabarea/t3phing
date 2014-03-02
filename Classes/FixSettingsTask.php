@@ -18,9 +18,19 @@ class FixSettingsTask extends BaseTask {
 		if (!file_exists($this->getSampleFile())) {
 			throw new Exception(sprintf('I could not find file "%s"', $this->getSampleFile()));
 		}
+
 		$content = file_get_contents($this->getSampleFile());
-		$localDomainGuessed = basename($this->getProject()->getBasedir());
-		$content = str_replace('CHANGE_ME_DOMAIN', 'CHANGE_ME_' . $localDomainGuessed ,$content);
+
+		$properties = array(
+			'local.domain',
+			'is.server.development',
+			'local.core.path',
+			'remote.server.credentials',
+			'remote.domain',
+		);
+		foreach ($properties as $property) {
+			$content = str_replace('__' . $property, $this->get($property) ,$content);
+		}
 
 		file_put_contents($this->getTargetFile(), $content);
 	}
