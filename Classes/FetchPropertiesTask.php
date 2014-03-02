@@ -18,8 +18,9 @@ class FetchPropertiesTask extends BaseTask {
 
 		if (!file_exists($this->getProject()->getProperty('file.properties'))) {
 
-			// TRUE means it is a development instance
-			// -> fetch remote configuration
+			$remoteConfiguration = array();
+
+			// TRUE means it is a development instance and we must fetch remote configuration.
 			if (!$this->get('isProduction')) {
 
 				/** @var RemoteCredentialsService $remoteCredentialsService */
@@ -27,7 +28,6 @@ class FetchPropertiesTask extends BaseTask {
 				$remoteConfiguration = $remoteCredentialsService->getConfiguration();
 				$this->setProperties($remoteConfiguration);
 			}
-
 
 			/** @var LocalCredentialsService $localCredentialsService */
 			$localCredentialsService = new LocalCredentialsService($this);
