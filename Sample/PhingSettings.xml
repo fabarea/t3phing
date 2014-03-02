@@ -11,26 +11,28 @@
 
 	-->
 
-	<!-- Flags -->
-	<property name="dryRun" value="${dryRun}"/>
-
-	<!-- Remote and Local environment  -->
-	<property name="remote.server.credentials" value="CHANGE_ME"/><!-- username@host.name -->
-	<property name="remote.directory.temp" value="/tmp"/>
-	<property name="local.directory.temp" value="${remote.directory.temp}"/>
-	<property name="local.mysql.binary" value="mysql"/>
-	<property name="local.core.path" value="/t3core/typo3_src-6.1"/><!-- CHANGE_ME -->
-
-	<!-- Remote site configuration -->
-	<property name="remote.domain" value="example.com"/><!-- CHANGE_ME MAIN_DOMAIN WITHOUT WWW -->
-	<property name="remote.directory.home" value="/sites/${remote.domain}"/><!-- ABSOLUTE PATH -->
-	<property name="remote.directory.documentRoot" value="${remote.directory.home}/htdocs"/>
-	<property name="remote.database.credentials" value="${remote.directory.home}/configuration/Settings.php"/>
+	<!-- Local Properties -->
+	<property name="isProduction" value="false"/>
+	<property name="local.core.path" value="CHANGE_ME" description="README: /t3core/typo3_src-6.1"/>
 
 	<!-- Local site configuration -->
-	<property name="local.domain" value="example.local"/>
+	<property name="local.domain" value="CHANGE_ME_DOMAIN" description="README: example.com (without www)"/>
 	<property name="local.directory.home" value="."/>
 	<property name="local.directory.documentRoot" value="htdocs"/>
 	<property name="local.database.credentials" value="configuration/Settings.php"/>
+
+	<!-- Local environment  -->
+	<property name="local.directory.temp" value="/tmp"/>
+	<property name="local.mysql.binary" value="mysql"/>
+
+	<!-- Remote site configuration -->
+	<property name="remote.domain" value="CHANGE_ME_DOMAIN" description="README: example.com (without www)"/>
+	<property name="remote.directory.home" value="/sites/${remote.domain}" description="README: absolute path"/>
+	<property name="remote.directory.documentRoot" value="${remote.directory.home}/htdocs"/>
+	<property name="remote.database.credentials" value="${remote.directory.home}/configuration/Settings.php"/>
+
+	<!-- Remote environment  -->
+	<property name="remote.server.credentials" value="CHANGE_ME" description="README: username@host.name"/>
+	<property name="remote.directory.temp" value="/tmp"/>
 
 </project>

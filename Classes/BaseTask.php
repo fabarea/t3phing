@@ -104,17 +104,6 @@ abstract class BaseTask extends Task {
 	protected $remoteHostProperty = 'remote.database.host';
 
 	/**
-	 * Initialize project
-	 *
-	 * @return void
-	 */
-	public function main() {
-
-		// Get project properties
-		$this->properties = $this->project->getProperties();
-	}
-
-	/**
 	 * Tells whether the dry run flag is found.
 	 *
 	 * @return bool

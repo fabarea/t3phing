@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <project name="Master" basedir="Tasks" default="">
 
+	<property name="dryRun" value="${dryRun}"/>
 	<property name="build.home" value="build/Phing"/>
 	<import file="${build.home}/AssetCompiler.xml"/>
 	<import file="${build.home}/CacheHandler.xml"/>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<project name="Master" basedir="Tasks" default="">
+
+	<property name="build.home" value="build/Phing"/>
+	<property name="dryRun" value="${dryRun}"/>
+
+	<!-- FILE SET -->
+	<path id="t3phing.classes">
+		<pathelement dir="${build.home}/Classes/"/>
+	</path>
+
+	<!-- TASK DEFINITION -->
+	<taskdef name="fixSettings" classname="FixSettingsTask" classpathref="t3phing.classes"/>
+
+	<!--
+		==============================================
+		Default entry point
+		==============================================
+	-->
+	<target name="help">
+		<fixSettings/>
+	</target>
+
+</project>
