@@ -36,8 +36,8 @@
 	<!-- ============================================  -->
 	<!-- Target: css                                   -->
 	<!-- ============================================  -->
-	<target name="package" depends="asset-package"/>
-	<target name="asset-package">
+	<target name="package" depends="asset-build"/>
+	<target name="asset-build">
 		<echo>-----------------------------</echo>
 		<echo>Package Assets</echo>
 		<echo>-----------------------------</echo>

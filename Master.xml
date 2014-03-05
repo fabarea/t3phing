@@ -61,7 +61,7 @@
 		<echo>---------------------------------------------</echo>
 		<echo>Compile Assets (css, js, images, ...)</echo>
 		<echo>---------------------------------------------</echo>
-		<echo>phing asset-package   - Package assets for this website. This will compile css and js files and package them</echo>
+		<echo>phing asset-build     - Package assets for this website. This will compile css and js files and package them</echo>
 		<echo>phing asset-watch     - Watch you assets and compile as you change them-</echo>
 		<echo>phing bower-install   - Install all Web Components configured in EXT:speciality/bower.json</echo>
 		<echo>phing bower-update    - Update all Web Components configured in EXT:speciality/bower.json</echo>
