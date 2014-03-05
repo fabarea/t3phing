@@ -41,7 +41,7 @@
 		<echo>-----------------------------</echo>
 		<echo>Package Assets</echo>
 		<echo>-----------------------------</echo>
-		<exec command="cd htdocs/typo3conf/ext/speciality; grunt package" checkreturn="true"
+		<exec command="cd htdocs/typo3conf/ext/speciality; grunt build" checkreturn="true"
 		      logoutput="/dev/stdout"/>
 	</target>
 
