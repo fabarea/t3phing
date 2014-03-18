@@ -83,7 +83,8 @@
 		<echo>---------------------------------------------</echo>
 		<echo>Import website locally</echo>
 		<echo>---------------------------------------------</echo>
-		<echo>phing import-dump    - Fetch the database and build it again locally for TYPO3 6.0</echo>
+		<echo>phing show            - Show Phing current configuration</echo>
+		<echo>phing import-dump     - Fetch the database and build it again locally for TYPO3 6.0</echo>
 		<echo>phing htaccess        - Fetch the htaccess from the remote server</echo>
 		<echo>phing symlink         - Create symlinks to the core, current value "${local.core.path}"</echo>
 		<echo>phing uploads         - Fetch uploads folder</echo>

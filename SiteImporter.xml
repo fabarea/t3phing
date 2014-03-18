@@ -15,6 +15,27 @@
 		Dump database
 		==============================================
 	-->
+	<target name="show" depends="">
+		<echo>-----------------------------</echo>
+		<echo>Phing Configuration</echo>
+		<echo>-----------------------------</echo>
+
+		<echo>local.domain: ${local.domain}</echo>
+		<echo>local.directory.home: ${local.directory.home}</echo>
+		<echo>local.database.credentials: ${local.database.credentials}</echo>
+		<echo></echo>
+		<echo>remote.domain: ${remote.domain}</echo>
+		<echo>remote.directory.home: ${remote.directory.home}</echo>
+		<echo>remote.database.credentials: ${remote.database.credentials}</echo>
+		<echo></echo>
+		<echo>local.core.path: ${local.core.path}</echo>
+	</target>
+
+	<!--
+		==============================================
+		Dump database
+		==============================================
+	-->
 	<target name="import-dump-legacy" depends="">
 		<echo>-----------------------------</echo>
 		<echo>Dump database</echo>
