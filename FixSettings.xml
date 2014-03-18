@@ -18,6 +18,52 @@
 		==============================================
 	-->
 	<target name="help">
+
+		<echo>Since file "configuration/PhingSettings.xml", let try to create it.</echo>
+		<echo></echo>
+		<echo>A few questions related to your local environment.</echo>
+		<echo>The phing build will best work in a Virtual Host.</echo>
+		<echo></echo>
+		<echo>Enter your local domain without 'www', e.g. example.local.</echo>
+		<input propertyName="local.domain"
+		       message="local.domain: "/>
+
+		<echo>Enter the path where to find the database credentials. Default: configuration/Settings.php</echo>
+		<input propertyName="local.database.credentials"
+		       message="local.database.credentials: "/>
+
+		<echo>Enter the path to TYPO3 CMS Core. Default: /t3core/typo3_src-6.1</echo>
+		<input propertyName="local.core.path"
+		       message="local.core.path: "/>
+
+		<echo>Do you have a deployment server where to deploy? Enter true or false. Default: true</echo>
+		<input propertyName="has.server.deployment"
+		       message="has.server.deployment: "/>
+
+		<echo></echo>
+		<echo>A few questions related to your remote server. Enter values if previously enter true for has.server.deployment</echo>
+		<echo>Enter the credentials to the server if relevant. Ex. user@domain.com</echo>
+		<input propertyName="remote.server.credentials"
+		       message="remote.server.credentials: "/>
+
+		<echo>Enter the final domain without 'www' if relevant.</echo>
+		<input propertyName="remote.domain"
+		       message="remote.domain: "/>
+
+		<echo>Enter the home directory of the remote (not necessarily the document root), e.g /sites/domain.com</echo>
+		<input propertyName="remote.directory.home"
+		       message="remote.directory.home: "/>
+
+		<echo>Enter the path where to find the database credentials relative to remote.directory.home. Default:
+			configuration/Settings.php</echo>
+		<input propertyName="remote.database.credentials"
+		       message="remote.database.credentials: "/>
+
+		<echo></echo>
+		<echo>[WARNING] A new file "configuration/PhingSettings.xml" has just been generated.</echo>
+		<echo>It may be a good idea to have a look at it and personalise it a bit...</echo>
+		<echo>Once being checked, run again this phing. It should look different.</echo>
+
 		<fixSettings/>
 	</target>
 

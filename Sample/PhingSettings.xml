@@ -12,14 +12,14 @@
 	-->
 
 	<!-- Local Properties -->
-	<property name="is.server.development" value="__is.server.development"/>
+	<property name="has.server.deployment" value="__has.server.deployment"/>
 	<property name="local.core.path" value="__local.core.path"/>
 
 	<!-- Local site configuration -->
 	<property name="local.domain" value="__local.domain"/>
 	<property name="local.directory.home" value="."/>
 	<property name="local.directory.documentRoot" value="htdocs"/>
-	<property name="local.database.credentials" value="configuration/Settings.php"/>
+	<property name="local.database.credentials" value="__local.database.credentials"/>
 
 	<!-- Local environment  -->
 	<property name="local.directory.temp" value="/tmp"/>
@@ -27,9 +27,9 @@
 
 	<!-- Remote site configuration -->
 	<property name="remote.domain" value="__remote.domain"/>
-	<property name="remote.directory.home" value="/sites/${remote.domain}"/>
+	<property name="remote.directory.home" value="__remote.directory.home"/>
 	<property name="remote.directory.documentRoot" value="${remote.directory.home}/htdocs"/>
-	<property name="remote.database.credentials" value="${remote.directory.home}/configuration/Settings.php"/>
+	<property name="remote.database.credentials" value="${remote.directory.home}/__remote.database.credentials"/>
 
 	<!-- Remote environment  -->
 	<property name="remote.server.credentials" value="__remote.server.credentials"/>

@@ -22,14 +22,18 @@ class FixSettingsTask extends BaseTask {
 		$content = file_get_contents($this->getSampleFile());
 
 		$properties = array(
-			'local.domain',
-			'is.server.development',
-			'local.core.path',
-			'remote.server.credentials',
-			'remote.domain',
+			'local.domain' => '',
+			'has.server.deployment' => 'true',
+			'local.database.credentials' => 'configuration/Settings.php',
+			'local.core.path' => '/t3core/typo3_src-6.1',
+			'remote.server.credentials' => '',
+			'remote.domain' => '',
+			'remote.directory.home' => '',
+			'remote.database.credentials' => 'configuration/Settings.php',
 		);
-		foreach ($properties as $property) {
-			$content = str_replace('__' . $property, $this->get($property) ,$content);
+		foreach ($properties as $propertyName => $defaultValue) {
+			$value = trim($this->get($propertyName)) ? trim($this->get($propertyName)) : $defaultValue;
+			$content = str_replace('__' . $propertyName, $value, $content);
 		}
 
 		file_put_contents($this->getTargetFile(), $content);
