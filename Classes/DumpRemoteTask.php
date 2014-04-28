@@ -82,7 +82,7 @@ class DumpRemoteTask extends BaseTask {
 		$command = 'ssh ' . $this->getRemoteServerCredentials() . " '";
 
 		// creates a light dump of the database
-		$command .= sprintf("mysqldump -u %s -p%s -h %s -e -Q %s %s > %s/%s.sql; ",
+		$command .= sprintf("mysqldump -u %s -p\"%s\" -h %s -e -Q %s %s > %s/%s.sql; ",
 			$this->getUsername(),
 			$this->getPassword(),
 			$this->getHost(),
@@ -95,7 +95,7 @@ class DumpRemoteTask extends BaseTask {
 		);
 
 		// creates a dump of cache tables
-		$command .= sprintf("mysqldump -u %s -p%s -h %s -e -Q --no-data %s %s >> %s/%s.sql ; ",
+		$command .= sprintf("mysqldump -u %s -p\"%s\" -h %s -e -Q --no-data %s %s >> %s/%s.sql ; ",
 			$this->getUsername(),
 			$this->getPassword(),
 			$this->getHost(),
