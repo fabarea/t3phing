@@ -19,10 +19,10 @@
 	-->
 	<target name="help">
 
-		<echo>Since file "configuration/PhingSettings.xml", let try to create it.</echo>
+		<echo>Missing file "configuration/PhingSettings.xml", let create it.</echo>
 		<echo></echo>
 		<echo>A few questions related to your local environment.</echo>
-		<echo>The phing build will best work in a Virtual Host.</echo>
+		<echo>This Phing will best work when having a local Virtual Host (vs. local website is under localhost)</echo>
 		<echo></echo>
 		<echo>Enter your local domain without 'www', e.g. example.local.</echo>
 		<input propertyName="local.domain"
@@ -60,7 +60,7 @@
 		       message="remote.database.credentials: "/>
 
 		<echo></echo>
-		<echo>[WARNING] A new file "configuration/PhingSettings.xml" has just been generated.</echo>
+		<echo>[NOTICE] A new file "configuration/PhingSettings.xml" has just been generated.</echo>
 		<echo>It may be a good idea to have a look at it and personalise it a bit...</echo>
 		<echo>Once being checked, run again this phing. It should look different.</echo>
 
