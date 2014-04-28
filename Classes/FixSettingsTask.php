@@ -8,6 +8,11 @@ require_once('BaseTask.php');
 class FixSettingsTask extends BaseTask {
 
 	/**
+	 * @var string
+	 */
+	protected $configurationDirectory = 'configuration';
+
+	/**
 	 * Main entry point.
 	 *
 	 * @throws Exception
@@ -36,15 +41,30 @@ class FixSettingsTask extends BaseTask {
 			$content = str_replace('__' . $propertyName, $value, $content);
 		}
 
+		if (!is_dir($this->getTargetDirectory())) {
+			mkdir($this->getTargetDirectory());
+		}
+
 		file_put_contents($this->getTargetFile(), $content);
 	}
 
 	/**
 	 * @return string
 	 */
+	public function getTargetDirectory() {
+		return sprintf('%s/%s',
+			$this->getProject()->getBasedir(),
+			$this->configurationDirectory
+		);
+	}
+
+	/**
+	 * @return string
+	 */
 	public function getTargetFile() {
-		return sprintf('%s/configuration/PhingSettings.xml',
-			$this->getProject()->getBasedir()
+		return sprintf('%s/%s/PhingSettings.xml',
+			$this->getProject()->getBasedir(),
+			$this->configurationDirectory
 		);
 	}
 
