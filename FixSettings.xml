@@ -32,7 +32,7 @@
 		<input propertyName="local.database.credentials"
 		       message="local.database.credentials: "/>
 
-		<echo>Enter the path to TYPO3 CMS Core. Default: /t3core/typo3_src-6.1</echo>
+		<echo>Enter the path to TYPO3 CMS Core. Default: /t3core/typo3_src-6.2</echo>
 		<input propertyName="local.core.path"
 		       message="local.core.path: "/>
 
