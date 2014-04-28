@@ -14,7 +14,7 @@ Will display the usage of the phing:
      [echo] phing dump6           - fetch the database and build it again locally for TYPO3 6.0
      [echo] phing dump            - fetch the database and build it again locally
      [echo] phing htaccess        - fetch the htaccess from the remote server
-     [echo] phing symlink         - create symlinks to the core - /t3core/typo3_src-4.5.git
+     [echo] phing symlink         - create symlinks to the core - /t3core/typo3_src-6.2.git
      [echo] phing typo3temp       - create typo3temp directory
      [echo] phing uploads         - fetch uploads folder
      [echo] phing fileadmin       - fetch fileadmin

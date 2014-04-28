@@ -25,7 +25,7 @@ class FixSettingsTask extends BaseTask {
 			'local.domain' => '',
 			'has.server.deployment' => 'true',
 			'local.database.credentials' => 'configuration/Settings.php',
-			'local.core.path' => '/t3core/typo3_src-6.1',
+			'local.core.path' => '/t3core/typo3_src-6.2',
 			'remote.server.credentials' => '',
 			'remote.domain' => '',
 			'remote.directory.home' => '',
