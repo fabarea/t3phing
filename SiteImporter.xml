@@ -182,7 +182,7 @@
 		<echo>-----------------------------</echo>
 		<echo>Fetching file...</echo>
 		<commandLocal
-				command="scp -q ${remote.credentials}:${remote.directory.documentRoot}/typo3conf/localconf.php ${local.directory.documentRoot}/typo3conf/localconf.php"/>
+				command="scp -q ${remote.server.credentials}:${remote.directory.documentRoot}/typo3conf/localconf.php ${local.directory.documentRoot}/typo3conf/localconf.php"/>
 
 		<echo>Updating localconf...</echo>
 		<localconfFinisher directory="${local.directory.documentRoot}/"
@@ -199,7 +199,7 @@
 		<echo>-----------------------------</echo>
 		<echo>Fetching file...</echo>
 		<commandLocal
-				command="scp -q ${remote.credentials}:${remote.directory.documentRoot}/.htaccess ${local.directory.documentRoot}//"/>
+				command="scp -q ${remote.server.credentials}:${remote.directory.documentRoot}/.htaccess ${local.directory.documentRoot}//"/>
 	</target>
 
 	<!-- ============================================== -->
