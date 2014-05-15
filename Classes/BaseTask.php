@@ -192,10 +192,11 @@ abstract class BaseTask extends Task {
 	 * @return string
 	 */
 	public function get($propertyName) {
-		if ($this->getProject()->getProperty($propertyName) === null) {
-			throw new Exception(sprintf('I could not find a value for property "%s"', $propertyName), 1393770269);
+		$value = '';
+		if ($this->getProject()->getProperty($propertyName) !== null) {
+			$value = $this->getProject()->getProperty($propertyName);
 		}
-		return $this->getProject()->getProperty($propertyName);
+		return $value;
 	}
 
 	/**
