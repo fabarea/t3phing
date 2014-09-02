@@ -87,13 +87,12 @@
 		<echo>phing show            - Show Phing current configuration</echo>
 		<echo>phing import-dump     - Fetch the database and build it again locally for TYPO3 6.0</echo>
 		<echo>phing htaccess        - Fetch the htaccess from the remote server</echo>
-		<echo>phing symlink         - Create symlinks to the core, current value "${local.core.path}"</echo>
 		<echo>phing uploads         - Fetch uploads folder</echo>
 		<echo>phing fileadmin       - Fetch fileadmin</echo>
 		<echo>phing user_upload     - Fetch user_upload folder</echo>
 		<echo/>
 		<echo>phing d               - import-dump</echo>
-		<echo>phing initialize6     - import-dump, htaccess, symlink, uploads, fileadmin</echo>
+		<echo>phing initialize6     - import-dump, htaccess, uploads, fileadmin</echo>
 		<echo>phing reset           - import-dump, clear_cache, warmup</echo>
 
 		<echo/>

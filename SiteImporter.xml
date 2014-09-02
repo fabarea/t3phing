@@ -7,7 +7,7 @@
 		Entry Point
 		==============================================
 	-->
-	<target name="initialize" depends="import-dump, htaccess, symlink, uploads, fileadmin"/>
+	<target name="initialize" depends="import-dump, htaccess, uploads, fileadmin"/>
 	<target name="reset" depends="import-dump, clear_cache, warmup"/>
 
 	<!--
@@ -27,8 +27,6 @@
 		<echo>remote.domain: ${remote.domain}</echo>
 		<echo>remote.directory.home: ${remote.directory.home}</echo>
 		<echo>remote.database.credentials: ${remote.database.credentials}</echo>
-		<echo></echo>
-		<echo>local.core.path: ${local.core.path}</echo>
 	</target>
 
 	<!--
@@ -200,16 +198,6 @@
 		<echo>Fetching file...</echo>
 		<commandLocal
 				command="scp -q ${remote.server.credentials}:${remote.directory.documentRoot}/.htaccess ${local.directory.documentRoot}//"/>
-	</target>
-
-	<!-- ============================================== -->
-	<target name="symlink" depends="">
-		<echo>-----------------------------</echo>
-		<echo>Symlink</echo>
-		<echo>-----------------------------</echo>
-		<echo>Creating symlink...</echo>
-		<delete file="${local.directory.documentRoot}/typo3_src"/>
-		<symlink target="${local.core.path}" link="${local.directory.documentRoot}/typo3_src"/>
 	</target>
 
 </project>

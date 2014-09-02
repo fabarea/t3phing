@@ -41,13 +41,12 @@ Will display the usage of the phing:
      [echo] phing show            - Show Phing current configuration
      [echo] phing import-dump     - Fetch the database and build it again locally for TYPO3 6.0
      [echo] phing htaccess        - Fetch the htaccess from the remote server
-     [echo] phing symlink         - Create symlinks to the core, current value "/t3core/typo3_src-6.1"
      [echo] phing uploads         - Fetch uploads folder
      [echo] phing fileadmin       - Fetch fileadmin
      [echo] phing user_upload     - Fetch user_upload folder
      [echo]
      [echo] phing d               - import-dump
-     [echo] phing initialize6     - import-dump, htaccess, symlink, uploads, fileadmin
+     [echo] phing initialize6     - import-dump, htaccess, uploads, fileadmin
      [echo] phing reset           - import-dump, clear_cache, warmup
      [echo]
      [echo] ---------------------------------------------

@@ -33,11 +33,6 @@
 		<input propertyName="local.database.credentials"
 		       message="local.database.credentials: "/>
 
-		<echo>Enter the path to TYPO3 CMS Core relative to the Document Root. Default: /t3core/typo3_src-6.2.</echo>
-		<echo>Simply, leave empty if you do not want to use symlink with this phing task.</echo>
-		<input propertyName="local.core.path"
-		       message="local.core.path: "/>
-
 		<echo>Do you have a deployment server where to deploy? Enter true or false. Default: true</echo>
 		<input propertyName="has.server.deployment"
 		       message="has.server.deployment: "/>
@@ -53,7 +48,7 @@
 				<input propertyName="remote.server.credentials"
 				       message="remote.server.credentials: "/>
 
-				<echo>Enter the final domain without 'www' if relevant.</echo>
+				<echo>Enter the final domain without 'www'.</echo>
 				<input propertyName="remote.domain"
 				       message="remote.domain: "/>
 
