@@ -52,12 +52,8 @@
 		<echo>------------------------------</echo>
 		<echo>Watching and compiling CSS</echo>
 		<echo>------------------------------</echo>
-		<echo>Files are being watched but you will not see any further info here.</echo>
-		<echo>Phing is not appropriate for this, do rather:</echo>
-		<echo>$> cd htdocs/typo3conf/ext/speciality; grunt watch</echo>
-
 		<exec command="cd htdocs/typo3conf/ext/speciality; grunt watch" checkreturn="true"
-		      logoutput="/dev/stdout"/>
+		      logoutput="/dev/stdout" passthru="true" />
 	</target>
 
 	<!-- ============================================  -->
