@@ -74,7 +74,10 @@
 
 		<!-- reset database password for admin user -->
 		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE be_users SET username = 'admin', password = '5f4dcc3b5aa765d61d8327deb882cf99' WHERE username = 'ecoadmin';&quot; ${local.database.name}"/>
+			command="${mysql.local} -e &quot;DELETE FROM be_users WHERE username = 'admin';&quot; ${local.database.name}"/>
+
+		<commandLocal
+				command="${mysql.local} -e &quot;INSERT INTO be_users (username, password, admin) VALUES ('admin', 'password', 1) &quot; ${local.database.name}"/>
 
 		<echo>Clean up environment...</echo>
 		<commandLocal command="rm -f ${local.directory.temp}/${remote.database.name}.bz2"/>
@@ -128,7 +131,10 @@
 
 		<!-- reset database password for admin user -->
 		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE be_users SET username = 'admin', password = '5f4dcc3b5aa765d61d8327deb882cf99' WHERE username = 'ecoadmin';&quot; ${local.database.name}"/>
+			command="${mysql.local} -e &quot;DELETE FROM be_users WHERE username = 'admin';&quot; ${local.database.name}"/>
+
+			<commandLocal
+				command="${mysql.local} -e &quot;INSERT INTO be_users (username, password, admin) VALUES ('admin', 'password', 1) &quot; ${local.database.name}"/>
 
 		<echo>Clean up environment...</echo>
 		<commandLocal command="rm -f ${local.directory.temp}/${remote.database.name}.bz2"/>
