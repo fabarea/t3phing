@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<project name="main" basedir="." default="help"  description="Various tasks for managing this website">
+
+	<if>
+		<not>
+			<available file="build/Phing/Master.xml" type="file"
+			           property="file.master.exists"/>
+		</not>
+		<then>
+			<echo>[ERROR] I could not find file "build/Phing/Master.xml"</echo>
+			<echo>Make sure you have correctly installed the tasks.</echo>
+			<php expression="exit();"/>
+		</then>
+	</if>
+
+	<if>
+		<not>
+			<available file="configuration/PhingSettings.xml" type="file"
+			           property="file.settings.exists"/>
+		</not>
+		<then>
+			<import file="build/Phing/FixSettings.xml"/>
+		</then>
+		<else>
+			<import file="configuration/PhingSettings.xml"/>
+			<import file="build/Phing/Master.xml"/>
+		</else>
+	</if>
+
+</project>

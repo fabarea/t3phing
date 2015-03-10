@@ -1,5 +1,32 @@
 My Phing tasks for TYPO3 CMS. Save me from some tedious work...
 
+
+Installation
+------------
+
+This Phing will best run in the context of the `Speciality Distribution`_ for TYPO3 CMS.
+
+I normally installed as follows, next to the Document Root (htdocs).
+
+::
+
+	# Prepare the ground
+	cd /sites/domain.tld
+	mkdir build;
+
+	# Fetch the source Luke
+	# Alternatively use https://github.com/fabarea/t3phing.git as URL if you don't have an account on github.com
+	git clone git@github.com:fabarea/t3phing.git build/Phing
+
+	# Copy the sample build.xml
+	cp build/Phing/Sample/Build.xml build.xml
+
+	# Check it works correctly and follows the wizard.
+	phing
+
+.. _Speciality Distribution: https://github.com/Ecodev/bootstrap_package
+
+
 Usage:
 ------
 
@@ -14,16 +41,6 @@ Will display the usage of the phing:
      [echo]
      [echo] phing help            - display this help message
      [echo]
-     [echo] ---------------------------------------------
-     [echo] Compile Assets (css, js, images, ...)
-     [echo] ---------------------------------------------
-     [echo] phing asset-build     - Package assets for this website. This will compile css and js files and package them
-     [echo] phing asset-watch     - Watch you assets and compile as you edit. Equivalent to:
-     [echo]                         cd htdocs/typo3conf/ext/speciality; grunt watch
-     [echo] phing bower-install   - Install all Web Components configured in EXT:speciality/bower.json
-     [echo] phing bower-update    - Update all Web Components configured in EXT:speciality/bower.json
-     [echo] phing bower-status    - Check whether Web Components must be updated
-     [echo] phing check-system    - Check dependencies are correctly met. This will ensure Phing to work.
      [echo]
      [echo] ---------------------------------------------
      [echo] Handle cache
@@ -62,13 +79,3 @@ Will display the usage of the phing:
      [echo] Possible option
      [echo] ---------------------------------------------
      [echo] -DdryRun=true        - will display the command to be executed
-
-
-Installation
-------------
-
-This Phing is meant to be run and installed in the context of the `Speciality Distribution`_ for TYPO3 CMS.
-
-.. _Speciality Distribution: https://github.com/Ecodev/bootstrap_package
-
-
