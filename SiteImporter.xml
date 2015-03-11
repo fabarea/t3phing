@@ -55,7 +55,7 @@
 
 		<echo>Reset database...</echo>
 		<commandLocal
-				command="${mysql.local} -e &quot;DROP DATABASE ${local.database.name}; CREATE DATABASE ${local.database.name};&quot;"/>
+				command="${mysql.local} -e &quot;DROP DATABASE IF EXISTS ${local.database.name}; CREATE DATABASE ${local.database.name};&quot;"/>
 
 		<echo>Import dump...</echo>
 		<commandLocal command="${mysql.local} ${local.database.name} &lt; ${local.directory.temp}/${remote.database.name}.sql"/>
@@ -112,7 +112,7 @@
 
 		<echo>Reset database...</echo>
 		<commandLocal
-				command="${mysql.local} -e &quot;DROP DATABASE ${local.database.name}; CREATE DATABASE ${local.database.name};&quot;"/>
+				command="${mysql.local} -e &quot;DROP DATABASE IF EXISTS ${local.database.name}; CREATE DATABASE ${local.database.name};&quot;"/>
 
 		<echo>Import dump...</echo>
 		<commandLocal command="${mysql.local} ${local.database.name} &lt; ${local.directory.temp}/${remote.database.name}.sql"/>
