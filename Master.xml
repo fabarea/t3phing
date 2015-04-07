@@ -45,7 +45,7 @@
 	<taskdef name="gitStatusRemote" classname="GitStatusRemoteTask" classpathref="t3phing.classes"/>
 	<taskdef name="localconfFinisher" classname="LocalconfFinisherTask" classpathref="t3phing.classes"/>
 	<taskdef name="rsync" classname="RsyncTask" classpathref="t3phing.classes"/>
-	<taskdef name="fetchProperties" classname="fetchPropertiesTask" classpathref="t3phing.classes"/>
+	<taskdef name="fetchProperties" classname="FetchPropertiesTask" classpathref="t3phing.classes"/>
 
 	<!--
 		==============================================
