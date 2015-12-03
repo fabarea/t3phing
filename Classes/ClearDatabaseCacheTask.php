@@ -45,7 +45,6 @@ class ClearDatabaseCacheTask extends BaseTask {
 
 		$cacheTables = array(
 			#'be_sessions',
-			'cache_imagesizes',
 			#'sys_log',
 			'sys_lockedrecords',
 			#'sys_history',
