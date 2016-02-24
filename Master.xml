@@ -6,7 +6,6 @@
 	<import file="${build.home}/AssetCompiler.xml"/>
 	<import file="${build.home}/CacheHandler.xml"/>
 	<import file="${build.home}/SiteImporter.xml"/>
-	<import file="${build.home}/RemoteCommander.xml"/>
 
 	<property name="file.properties" value="configuration/PhingSettings.properties"/>
 
@@ -41,11 +40,8 @@
 	<taskdef name="commandLocal" classname="CommandLocalTask" classpathref="t3phing.classes"/>
 	<taskdef name="commandRemote" classname="CommandRemoteTask" classpathref="t3phing.classes"/>
 	<taskdef name="dumpRemote" classname="DumpRemoteTask" classpathref="t3phing.classes"/>
-	<taskdef name="gitDiffRemote" classname="GitDiffRemoteTask" classpathref="t3phing.classes"/>
-	<taskdef name="gitStatusRemote" classname="GitStatusRemoteTask" classpathref="t3phing.classes"/>
 	<taskdef name="localconfFinisher" classname="LocalconfFinisherTask" classpathref="t3phing.classes"/>
 	<taskdef name="rsync" classname="RsyncTask" classpathref="t3phing.classes"/>
-	<taskdef name="fetchProperties" classname="FetchPropertiesTask" classpathref="t3phing.classes"/>
 
 	<!--
 		==============================================
@@ -94,16 +90,6 @@
 		<echo>phing d               - import-dump</echo>
 		<echo>phing initialize6     - import-dump, htaccess, uploads, fileadmin</echo>
 		<echo>phing reset           - import-dump, clear_cache, warmup</echo>
-
-		<echo/>
-		<echo>---------------------------------------------</echo>
-		<echo>Commands on remote</echo>
-		<echo>---------------------------------------------</echo>
-		<echo>phing status             - git remote status</echo>
-		<echo>phing diff               - git remote diff</echo>
-		<echo/>
-		<echo>phing st                 - Shortcut of "phing status"</echo>
-		<echo>phing df                 - Shortcut of "phing diff"</echo>
 
 		<echo/>
 		<echo>---------------------------------------------</echo>

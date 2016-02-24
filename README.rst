@@ -41,7 +41,6 @@ Will display the usage of the phing:
      [echo]
      [echo] phing help            - display this help message
      [echo]
-     [echo]
      [echo] ---------------------------------------------
      [echo] Handle cache
      [echo] ---------------------------------------------
@@ -65,15 +64,6 @@ Will display the usage of the phing:
      [echo] phing d               - import-dump
      [echo] phing initialize6     - import-dump, htaccess, uploads, fileadmin
      [echo] phing reset           - import-dump, clear_cache, warmup
-     [echo]
-     [echo] ---------------------------------------------
-     [echo] Commands on remote
-     [echo] ---------------------------------------------
-     [echo] phing status             - git remote status
-     [echo] phing diff               - git remote diff
-     [echo]
-     [echo] phing st                 - Shortcut of "phing status"
-     [echo] phing df                 - Shortcut of "phing diff"
      [echo]
      [echo] ---------------------------------------------
      [echo] Possible option
