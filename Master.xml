@@ -41,6 +41,7 @@
 	<taskdef name="dumpRemote" classname="DumpRemoteTask" classpathref="t3phing.classes"/>
 	<taskdef name="localconfFinisher" classname="LocalconfFinisherTask" classpathref="t3phing.classes"/>
 	<taskdef name="rsync" classname="RsyncTask" classpathref="t3phing.classes"/>
+	<taskdef name="fetchProperties" classname="FetchPropertiesTask" classpathref="t3phing.classes"/>
 
 	<!--
 		==============================================
@@ -57,12 +58,10 @@
 		<echo>---------------------------------------------</echo>
 		<echo>Handle cache</echo>
 		<echo>---------------------------------------------</echo>
-		<echo>phing clear_cache     - Flush cached files along with database cache (depth 3)</echo>
-		<echo>phing warmup          - Call Frontend to generate necessary files</echo>
-		<echo/>
 		<echo>phing c               - Clear cache, depth 1: typo3temp/Cache files</echo>
 		<echo>phing cc              - Clear cache, depth 2: all typo3temp files</echo>
 		<echo>phing ccc             - Clear cache, depth 3: all typo3temp files + database</echo>
+		<echo>phing warmup          - Call Frontend to generate necessary files</echo>
 		<echo/>
 
 		<echo>---------------------------------------------</echo>
@@ -75,14 +74,13 @@
 		<echo>phing fileadmin       - Fetch fileadmin</echo>
 		<echo>phing user_upload     - Fetch user_upload folder</echo>
 		<echo/>
-		<echo>phing d               - import-dump</echo>
-		<echo>phing reset           - import-dump, clear_cache, warmup</echo>
+		<echo>phing d               - import-dump shortcut</echo>
 
 		<echo/>
 		<echo>---------------------------------------------</echo>
 		<echo>Possible option</echo>
 		<echo>---------------------------------------------</echo>
-		<echo>-DdryRun=true        - will display the command to be executed</echo>
+		<echo>-DdryRun=true         - Only display the command to be executed</echo>
 	</target>
 
 </project>

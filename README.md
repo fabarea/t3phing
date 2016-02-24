@@ -40,12 +40,10 @@ Will display the usage of the phing:
      [echo] ---------------------------------------------
      [echo] Handle cache
      [echo] ---------------------------------------------
-     [echo] phing clear_cache     - Flush cached files along with database cache (depth 3)
-     [echo] phing warmup          - Call Frontend to generate necessary files
-     [echo]
      [echo] phing c               - Clear cache, depth 1: typo3temp/Cache files
      [echo] phing cc              - Clear cache, depth 2: all typo3temp files
      [echo] phing ccc             - Clear cache, depth 3: all typo3temp files + database
+     [echo] phing warmup          - Call Frontend to generate necessary files
      [echo]
      [echo] ---------------------------------------------
      [echo] Import website locally
@@ -57,11 +55,10 @@ Will display the usage of the phing:
      [echo] phing fileadmin       - Fetch fileadmin
      [echo] phing user_upload     - Fetch user_upload folder
      [echo]
-     [echo] phing d               - import-dump
-     [echo] phing reset           - import-dump, clear_cache, warmup
+     [echo] phing d               - import-dump shortcut
      [echo]
      [echo] ---------------------------------------------
      [echo] Possible option
      [echo] ---------------------------------------------
-     [echo] -DdryRun=true        - will display the command to be executed
+     [echo] -DdryRun=true         - Only display the command to be executed
 ```

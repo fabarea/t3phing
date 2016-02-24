@@ -1,15 +1,6 @@
 <?xml version="1.0"?>
 <project name="SiteImporter" basedir="Tasks" default="">
 
-
-	<!--
-		==============================================
-		Entry Point
-		==============================================
-	-->
-	<target name="initialize" depends="import-dump, htaccess, uploads, fileadmin"/>
-	<target name="reset" depends="import-dump, clear_cache, warmup"/>
-
 	<!--
 		==============================================
 		Dump database
@@ -34,59 +25,6 @@
 		Dump database
 		==============================================
 	-->
-	<target name="import-dump-legacy" depends="">
-		<echo>-----------------------------</echo>
-		<echo>Dump database</echo>
-		<echo>-----------------------------</echo>
-
-		<echo>Fetching remote database credentials...</echo>
-		<fetchProperties/>
-
-		<echo>Dumping remote database...</echo>
-
-		<dumpRemote/>
-
-		<echo>Fetching dump...</echo>
-		<rsync remoteDirectory="${remote.directory.temp}/${remote.database.name}.bz2"
-		       localDirectory="${local.directory.temp}/"/>
-
-		<echo>Extracting file...</echo>
-		<commandLocal command="tar -C ${local.directory.temp}/ -xjf ${local.directory.temp}/${remote.database.name}.bz2"/>
-
-		<echo>Reset database...</echo>
-		<commandLocal
-				command="${mysql.local} -e &quot;DROP DATABASE IF EXISTS ${local.database.name}; CREATE DATABASE ${local.database.name};&quot;"/>
-
-		<echo>Import dump...</echo>
-		<commandLocal command="${mysql.local} ${local.database.name} &lt; ${local.directory.temp}/${remote.database.name}.sql"/>
-
-		<echo>Fine tunes database...</echo>
-		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE sys_domain SET domainName = REPLACE(domainName, '${remote.domain}', '${local.domain}');&quot; ${local.database.name}"/>
-		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE sys_template SET title = REPLACE(title, '${remote.domain}', '${local.domain}');&quot; ${local.database.name}"/>
-		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE sys_template SET config = REPLACE(config, '${remote.domain}', '${local.domain}');&quot; ${local.database.name}"/>
-		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE sys_template SET constants = REPLACE(constants, '${remote.domain}', '${local.domain}');&quot; ${local.database.name}"/>
-		<commandLocal
-				command="${mysql.local} -e &quot;UPDATE pages SET title = REPLACE(title, '${remote.domain}', '${local.domain}');&quot; ${local.database.name}"/>
-
-		<!-- reset database password for admin user -->
-		<commandLocal
-			command="${mysql.local} -e &quot;DELETE FROM be_users WHERE username = 'admin';&quot; ${local.database.name}"/>
-
-		<commandLocal
-				command="${mysql.local} -e &quot;INSERT INTO be_users (username, password, admin) VALUES ('admin', 'password', 1) &quot; ${local.database.name}"/>
-
-		<echo>Clean up environment...</echo>
-		<commandLocal command="rm -f ${local.directory.temp}/${remote.database.name}.bz2"/>
-		<commandLocal command="rm -f ${local.directory.temp}/${remote.database.name}.sql"/>
-
-		<commandRemote command="rm ${remote.directory.temp}/${remote.database.name}.sql"/>
-		<commandRemote command="rm ${remote.directory.temp}/${remote.database.name}.bz2"/>
-	</target>
-
 
 	<target name="d" depends="import-dump"/>
 	<target name="import-dump" depends="">
@@ -145,7 +83,6 @@
 
 	</target>
 
-
 	<!--
 		==============================================
 		Synchronize files
@@ -177,33 +114,6 @@
 		<echo>fetching files...</echo>
 		<rsync remoteDirectory="${remote.directory.documentRoot}/fileadmin"
 		       localDirectory="${local.directory.documentRoot}/"/>
-	</target>
-
-	<!-- ============================================== -->
-	<target name="localconf-legacy" depends="">
-		<echo>-----------------------------</echo>
-		<echo>localconf.php</echo>
-		<echo>-----------------------------</echo>
-		<echo>Fetching file...</echo>
-		<commandLocal
-				command="scp -q ${remote.server.credentials}:${remote.directory.documentRoot}/typo3conf/localconf.php ${local.directory.documentRoot}/typo3conf/localconf.php"/>
-
-		<echo>Updating localconf...</echo>
-		<localconfFinisher directory="${local.directory.documentRoot}/"
-		                   database="${local.database.name}"
-		                   username="${local.database.username}"
-		                   password="${local.database.password}"
-		                   host="${local.database.host}"/>
-	</target>
-
-	<!-- ============================================== -->
-	<target name="htaccess" depends="">
-		<echo>-----------------------------</echo>
-		<echo>.htaccess</echo>
-		<echo>-----------------------------</echo>
-		<echo>Fetching file...</echo>
-		<commandLocal
-				command="scp -q ${remote.server.credentials}:${remote.directory.documentRoot}/.htaccess ${local.directory.documentRoot}//"/>
 	</target>
 
 </project>

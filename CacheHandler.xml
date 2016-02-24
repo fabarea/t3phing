@@ -4,7 +4,6 @@
 	<!-- ============================================== -->
 	<!-- Clear cache                                    -->
 	<!-- ============================================== -->
-	<target name="clear_cache" depends="c, cc, ccc"/>
 	<target name="c" depends="">
 		<echo>------------------------------</echo>
 		<echo>Deleting cached depth 1</echo>
