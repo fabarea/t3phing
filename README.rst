@@ -62,7 +62,6 @@ Will display the usage of the phing:
      [echo] phing user_upload     - Fetch user_upload folder
      [echo]
      [echo] phing d               - import-dump
-     [echo] phing initialize6     - import-dump, htaccess, uploads, fileadmin
      [echo] phing reset           - import-dump, clear_cache, warmup
      [echo]
      [echo] ---------------------------------------------
