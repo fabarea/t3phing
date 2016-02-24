@@ -1,14 +1,13 @@
 My Phing tasks for TYPO3 CMS. Save me from some tedious work...
 
-
 Installation
 ------------
 
-This Phing will best run in the context of the `Speciality Distribution`_ for TYPO3 CMS.
+This Phing will best run in the context of the [Speciality Distribution](https://github.com/Ecodev/bootstrap_package) for TYPO3 CMS.
 
 I normally installed as follows, next to the Document Root (htdocs).
 
-::
+```
 
 	# Prepare the ground
 	cd /sites/domain.tld
@@ -23,19 +22,16 @@ I normally installed as follows, next to the Document Root (htdocs).
 
 	# Check it works correctly and follows the wizard.
 	phing
-
-.. _Speciality Distribution: https://github.com/Ecodev/bootstrap_package
-
+```
 
 Usage:
 ------
 
 Will display the usage of the phing:
 
-::
+```
 
 	$> phing help (default)
-
 
      [echo] Usage of this Phing:
      [echo]
@@ -68,3 +64,4 @@ Will display the usage of the phing:
      [echo] Possible option
      [echo] ---------------------------------------------
      [echo] -DdryRun=true        - will display the command to be executed
+```
