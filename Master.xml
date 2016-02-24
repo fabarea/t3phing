@@ -16,7 +16,16 @@
 		</then>
 	</if>
 
-	<property name="mysql.local" value="${local.mysql.binary} -u ${local.database.username} -p${local.database.password}"/>
+	<if>
+		<equals arg1="${local.database.password}" arg2=""/>
+		<then>
+			<!-- handle case if SQL server has not password -->
+			<property name="mysql.local" value="${local.mysql.binary} -u ${local.database.username}"/>
+		</then>
+		<else>
+			<property name="mysql.local" value="${local.mysql.binary} -u ${local.database.username} -p${local.database.password}"/>
+		</else>
+	</if>
 
 	<!-- FILE SET -->
 	<fileset dir="${local.directory.documentRoot}/fileadmin" id="processedFiles">
