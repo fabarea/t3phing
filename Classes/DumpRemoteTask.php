@@ -44,18 +44,14 @@ class DumpRemoteTask extends BaseTask
             'cf_cache_rootline',
             'cf_cache_rootline_tags',
             'cf_extbase_object',
-            'cf_extbase_object_tags',
             'cf_extbase_reflection',
             'cf_extbase_reflection_tags',
             'cf_extbase_typo3dbbackend_tablecolumns',
             'cf_extbase_typo3dbbackend_tablecolumns_tags',
-            'tx_realurl_chashcache',
-            'tx_realurl_errorlog',
             'tx_realurl_pathcache',
-            'tx_realurl_redirects',
             'tx_realurl_uniqalias',
-            'tx_realurl_urldecodecache',
-            'tx_realurl_urlencodecache',
+            'tx_realurl_uniqalias_cache_map',
+            'tx_realurl_urlcache',
         );
 
         $cacheTables = array_merge($cacheTables, $this->additionalIgnoreTables);
