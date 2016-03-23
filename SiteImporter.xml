@@ -66,6 +66,8 @@
 				command="${mysql.local} -e &quot;UPDATE sys_template SET constants = REPLACE(constants, '${remote.domain}', '${local.domain}');&quot; ${local.database.name}"/>
 		<commandLocal
 				command="${mysql.local} -e &quot;UPDATE pages SET title = REPLACE(title, '${remote.domain}', '${local.domain}');&quot; ${local.database.name}"/>
+		<commandLocal
+				command="${mysql.local} -e &quot;UPDATE pages SET url_scheme = 0;&quot; ${local.database.name}"/>
 
 		<!-- reset database password for admin user -->
 		<commandLocal
