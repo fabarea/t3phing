@@ -77,7 +77,7 @@
 				command="${mysql.local} -e &quot;INSERT INTO be_users (username, password, admin) VALUES ('admin', 'password', 1) &quot; ${local.database.name}"/>
 
 		<commandLocal
-				command="${mysql.local} -e &quot;INSERT INTO fe_users (username, password, first_name, last_name, email, usergroup) VALUES ('admin', 'password', 'Admin', 'istrator', 'admin@istrator.com', (SELECT GROUP_CONCAT(uid SEPARATOR ',') FROM fe_groups where hidden = 0 and deleted = 0)) &quot; ${local.database.name}"/>
+				command="${mysql.local} -e &quot;INSERT INTO fe_users (username, password, first_name, last_name, email, usergroup, pid) VALUES ('admin', 'password', 'Admin', 'istrator', 'admin@istrator.com', (SELECT GROUP_CONCAT(uid SEPARATOR ',') FROM fe_groups where hidden = 0 and deleted = 0), (SELECT max(pid) FROM fe_groups)) &quot; ${local.database.name}"/>
 
 		<echo>Clean up environment...</echo>
 		<commandLocal command="rm -f ${local.directory.temp}/${remote.database.name}.bz2"/>
