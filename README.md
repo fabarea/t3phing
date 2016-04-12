@@ -38,19 +38,10 @@ Will display the usage of the phing:
      [echo] phing help            - display this help message
      [echo]
      [echo] ---------------------------------------------
-     [echo] Handle cache
-     [echo] ---------------------------------------------
-     [echo] phing c               - Clear cache, depth 1: typo3temp/Cache files
-     [echo] phing cc              - Clear cache, depth 2: all typo3temp files
-     [echo] phing ccc             - Clear cache, depth 3: all typo3temp files + database
-     [echo] phing warmup          - Call Frontend to generate necessary files
-     [echo]
-     [echo] ---------------------------------------------
      [echo] Import website locally
      [echo] ---------------------------------------------
      [echo] phing show            - Show Phing current configuration
      [echo] phing import-dump     - Fetch the database and build it again locally for TYPO3 6.0
-     [echo] phing htaccess        - Fetch the htaccess from the remote server
      [echo] phing uploads         - Fetch uploads folder
      [echo] phing fileadmin       - Fetch fileadmin
      [echo] phing user_upload     - Fetch user_upload folder

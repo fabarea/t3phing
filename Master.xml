@@ -3,7 +3,6 @@
 
 	<property name="dryRun" value="${dryRun}"/>
 	<property name="build.home" value="build/Phing"/>
-	<import file="${build.home}/CacheHandler.xml"/>
 	<import file="${build.home}/SiteImporter.xml"/>
 
 	<property name="file.properties" value="configuration/PhingSettings.properties"/>
@@ -33,18 +32,12 @@
 		<include name="*/_processed_/**"/>
 		<include name="*/*/_processed_/**"/>
 	</fileset>
-	<fileset dir="${local.directory.documentRoot}/typo3temp" id="typo3temp">
-		<include name="**"/>
-	</fileset>
-	<fileset dir="${local.directory.documentRoot}/typo3conf" id="typo3conf">
-		<include name="*.log"/>
-	</fileset>
 	<path id="t3phing.classes">
 		<pathelement dir="${build.home}/Classes/"/>
 	</path>
 
 	<!-- TASK DEFINITION -->
-	<taskdef name="clearDatabaseCache" classname="ClearDatabaseCacheTask" classpathref="t3phing.classes"/>
+	
 	<taskdef name="commandLocal" classname="CommandLocalTask" classpathref="t3phing.classes"/>
 	<taskdef name="commandRemote" classname="CommandRemoteTask" classpathref="t3phing.classes"/>
 	<taskdef name="dumpRemote" classname="DumpRemoteTask" classpathref="t3phing.classes"/>
@@ -65,20 +58,10 @@
 		<echo/>
 
 		<echo>---------------------------------------------</echo>
-		<echo>Handle cache</echo>
-		<echo>---------------------------------------------</echo>
-		<echo>phing c               - Clear cache, depth 1: typo3temp/Cache files</echo>
-		<echo>phing cc              - Clear cache, depth 2: all typo3temp files</echo>
-		<echo>phing ccc             - Clear cache, depth 3: all typo3temp files + database</echo>
-		<echo>phing warmup          - Call Frontend to generate necessary files</echo>
-		<echo/>
-
-		<echo>---------------------------------------------</echo>
 		<echo>Import website locally</echo>
 		<echo>---------------------------------------------</echo>
 		<echo>phing show            - Show Phing current configuration</echo>
 		<echo>phing import-dump     - Fetch the database and build it again locally for TYPO3 6.0</echo>
-		<echo>phing htaccess        - Fetch the htaccess from the remote server</echo>
 		<echo>phing uploads         - Fetch uploads folder</echo>
 		<echo>phing fileadmin       - Fetch fileadmin</echo>
 		<echo>phing user_upload     - Fetch user_upload folder</echo>

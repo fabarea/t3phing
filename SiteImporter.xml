@@ -86,6 +86,11 @@
 		<commandRemote command="rm ${remote.directory.temp}/${remote.database.name}.sql"/>
 		<commandRemote command="rm ${remote.directory.temp}/${remote.database.name}.bz2"/>
 
+		<!-- delete processed files -->
+		<delete>
+			<fileset refid="processedFiles"/>
+		</delete>
+
 	</target>
 
 	<!--
