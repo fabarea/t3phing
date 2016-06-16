@@ -24,7 +24,7 @@
 		<echo>A few questions related to your local environment.</echo>
 		<echo>This Phing will best work when having a local Virtual Host (and is not under localhost for instance)</echo>
 		<echo></echo>
-		<echo>Enter your local domain without 'www', e.g. example.local.</echo>
+		<echo>Enter your local domain without 'www', e.g. example.lan.</echo>
 		<input propertyName="local.domain"
 		       message="local.domain: "/>
 
@@ -33,18 +33,21 @@
 		<input propertyName="local.database.credentials"
 		       message="local.database.credentials: "/>
 
-		<echo>Do you have a deployment server where to deploy? Enter true or false. Default: true</echo>
+		<echo>Do you want to configure phing to fetch the website from a remote server? Enter true or false. Default: true</echo>
 		<input propertyName="has.server.deployment"
 		       message="has.server.deployment: "/>
 
 
 		<if>
-			<istrue value="${has.server.deployment}"/>
+			<or>
+  			<istrue value="${has.server.deployment}"/>
+  			<equals arg1="${has.server.deployment}" arg2="" />
+  		</or>
 			<then>
 				<echo></echo>
 				<echo>A few questions related to your remote server. Enter values if previously enter true for has.server.deployment
 				</echo>
-				<echo>Enter the credentials to the server if relevant. Ex. user@domain.com</echo>
+				<echo>Enter the SSH credentials to the server if relevant. Ex. user@domain.com</echo>
 				<input propertyName="remote.server.credentials"
 				       message="remote.server.credentials: "/>
 
@@ -52,7 +55,7 @@
 				<input propertyName="remote.domain"
 				       message="remote.domain: "/>
 
-				<echo>Enter the home directory of the remote (not necessarily the document root), e.g /sites/domain.com</echo>
+				<echo>Enter the home directory on the remote (without the trailing slash), e.g /sites/domain.com</echo>
 				<input propertyName="remote.directory.home"
 				       message="remote.directory.home: "/>
 
