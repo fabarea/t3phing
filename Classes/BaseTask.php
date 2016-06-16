@@ -264,6 +264,14 @@ abstract class BaseTask extends Task
     /**
      * @return string
      */
+    public function getLocalSystemUser()
+    {
+        return trim(`whoami`);
+    }
+
+    /**
+     * @return string
+     */
     public function getLocalPasswordProperty()
     {
         return $this->localPasswordProperty;

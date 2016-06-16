@@ -4,7 +4,7 @@
 	<property name="dryRun" value="${dryRun}"/>
 	<property name="build.home" value="build/Phing"/>
 	<import file="${build.home}/SiteImporter.xml"/>
-
+	<exec command="whoami" outputProperty="local.user" />
 	<property name="file.properties" value="configuration/PhingSettings.properties"/>
 
 	<available file="${file.properties}" type="file" property="file.exists"/>

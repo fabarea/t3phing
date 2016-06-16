@@ -54,7 +54,7 @@ class DumpRemoteTask extends BaseTask
         $command = 'ssh ' . $this->getRemoteServerCredentials() . " '";
 
         // creates a light dump of the database
-        $command .= sprintf("mysqldump -u %s -p\"%s\" -h %s -e -Q %s %s > %s/%s.sql; ",
+        $command .= sprintf("mysqldump -u %s -p\"%s\" -h %s -e -Q %s %s > %s/%s.%s.sql; ",
             $this->getUsername(),
             $this->getPassword(),
             $this->getHost(),
@@ -62,25 +62,27 @@ class DumpRemoteTask extends BaseTask
             $this->getDatabase(),
             $this->getRemoteDirectoryTemp(),
             $this->getDatabase(),
-            $this->getDatabase()
-
+            $this->getLocalSystemUser()
         );
 
         // creates a dump of cache tables
-        $command .= sprintf("mysqldump -u %s -p\"%s\" -h %s -e -Q --no-data %s %s >> %s/%s.sql ; ",
+        $command .= sprintf("mysqldump -u %s -p\"%s\" -h %s -e -Q --no-data %s %s >> %s/%s.%s.sql ; ",
             $this->getUsername(),
             $this->getPassword(),
             $this->getHost(),
             $this->getDatabase(),
             implode(' ', $cacheTables),
             $this->getRemoteDirectoryTemp(),
-            $this->getDatabase()
+            $this->getDatabase(),
+            $this->getLocalSystemUser()
         );
 
         $command .= sprintf("cd %s ; ", $this->getRemoteDirectoryTemp());
-        $command .= sprintf("tar -cjf %s.bz2 %s.sql ; ",
+        $command .= sprintf("tar -cjf %s.%s.bz2 %s.%s.sql ; ",
             $this->getDatabase(),
-            $this->getDatabase()
+            $this->getLocalSystemUser(),
+            $this->getDatabase(),
+            $this->getLocalSystemUser()
         );
 
         $command .= "'";
