@@ -162,7 +162,7 @@ abstract class BaseTask extends Task
      * @param string $message
      * @return void
      */
-    public function log($message = '')
+    public function log($message = '', $level = \Project::MSG_INFO)
     {
         if (is_array($message)) {
             foreach ($message as $line) {
