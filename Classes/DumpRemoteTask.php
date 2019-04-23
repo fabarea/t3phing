@@ -16,7 +16,7 @@ class DumpRemoteTask extends BaseTask
     /**
      * @var array
      */
-    protected $properties = array();
+    protected $properties = [];
 
     /**
      * Main entry point.
@@ -27,7 +27,7 @@ class DumpRemoteTask extends BaseTask
     {
 
         // This will not work for TYPO3 < 6.0
-        $cacheTables = array(
+        $cacheTables = [
             'be_sessions',
             'sys_log',
             'sys_history',
@@ -35,11 +35,7 @@ class DumpRemoteTask extends BaseTask
             'sys_file_processedfile',
             'sys_lockedrecords',
             'tx_extensionmanager_domain_model_extension',
-            'tx_realurl_pathdata',
-            'tx_realurl_uniqalias',
-            'tx_realurl_uniqalias_cache_map',
-            'tx_realurl_urldata',
-        );
+        ];
 
         $cacheTables = array_merge($cacheTables, $this->additionalIgnoreTables);
         $options = '';
